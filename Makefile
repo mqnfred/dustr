@@ -18,7 +18,7 @@ tests/%/actual_output: tests/%/bin/main.dart \
 
 # TODO: this will also generate tests/%/.packages and tests/%/.dart_tool
 tests/%/pubspec.lock: tests/%/pubspec.yaml
-	cd $(patsubst %,tests/%/pubspec.yaml,$(word 1,$^)); pub get
+	cd $(patsubst tests/%/pubspec.lock,tests/%,$@); pub get
 
 tests/%/bin/bindings.dart: tests/%/src/lib.rs tests/%/Cargo.toml $(DURT_SRC)
 	cargo run --package durt > $@
