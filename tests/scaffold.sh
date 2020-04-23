@@ -33,6 +33,7 @@ EOF
 mkdir ${dir}/lib
 cat > ${dir}/lib/main.dart <<EOF
 import 'package:durt/durt.dart';
+import 'bindings.dart';
 
 void main() {
 	alarm();

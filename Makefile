@@ -20,8 +20,8 @@ tests/%/actual_output: tests/%/bin/main.dart \
 tests/%/pubspec.lock: tests/%/pubspec.yaml
 	cd $(patsubst tests/%/pubspec.lock,tests/%,$@); pub get
 
-tests/%/bin/bindings.dart: tests/%/src/lib.rs tests/%/Cargo.toml $(DURT_SRC)
-	cargo run --package durt > $@
+#tests/%/bin/bindings.dart: tests/%/src/lib.rs tests/%/Cargo.toml $(DURT_SRC)
+#	cargo run --package durt > $@
 
 # TODO: something's off here: if updating ffishim library, those tests won't be
 # re-ran as ffishim sources are not part of the dependency. how to fix?
