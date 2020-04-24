@@ -1,3 +1,27 @@
+#[macro_use]
+extern crate clap;
+
+use ::clap::Clap;
+
 fn main() {
-    println!("Hello, {}!", 3);
+    let opts = Options::parse();
+    if let Err(err) = run(opts) {
+        eprintln!("error: {}", err);
+        ::std::process::exit(1);
+    }
+}
+
+fn run(opts: Options) -> ::anyhow::Result<()> {
+    ::durt::Package::new(opts.name, opts.crates)?.build(opts.destination)
+}
+
+#[derive(Clap, Debug)]
+#[clap(version = "0.1.0", author = "Louis Feuvrier")]
+struct Options {
+    #[clap(name = "crates", about = "Crates to generate dart code for")]
+    crates: Vec<::std::path::PathBuf>,
+    #[clap(short = "d", long = "dest", about = "Folder to initialize the dart library in")]
+    destination: ::std::path::PathBuf,
+    #[clap(short = "n", long = "name", about = "Dart library name")]
+    name: String,
 }

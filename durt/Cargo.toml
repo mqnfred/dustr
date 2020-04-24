@@ -14,6 +14,8 @@ edition = "2018"
 [dependencies]
 anyhow = "^1"
 cargo_toml = "^0"
+# TODO: switch to crates.io version
+clap = { git = "https://github.com/clap-rs/clap/" }
 darling = "^0"
 ffishim = { path = "../../ffishim/ffishim" }
 indoc = "^0"
