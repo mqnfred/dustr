@@ -33,13 +33,13 @@ impl crate::Module {
 }
 
 fn _process_item_struct(_is: ::syn::ItemStruct) -> Option<::syn::DeriveInput> {
+    // check if the item struct derives FFIShim
+    // transform the itemstruct into a derive input
     todo!()
 }
 
 fn _process_item_enum(_ie: ::syn::ItemEnum) -> Option<::syn::DeriveInput> {
-    todo!()
-}
-
-fn _module_name_from_path(_path: &::std::path::PathBuf) -> String {
+    // check if the item enum derives FFIShim
+    // transform the itemenum into a derive input
     todo!()
 }

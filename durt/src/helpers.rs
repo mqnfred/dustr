@@ -1,7 +1,7 @@
 use ::syn::*;
 
 macro_rules! fmt {
-    ($format_str:tt $(,$args:expr)*) => { format!(::indoc::indoc!($format_str), $($args),*) }
+    ($format_str:tt $(,$args:tt)*) => { format!(::indoc::indoc!($format_str), $($args),*) }
 }
 
 pub fn is_same_id(path: &Path, id: &str) -> bool {

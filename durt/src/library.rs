@@ -1,5 +1,5 @@
 impl crate::Library {
-    fn build(&self, dest: ::std::path::PathBuf) -> ::anyhow::Result<()> {
+    fn _build(&self, _dest: ::std::path::PathBuf) -> ::anyhow::Result<()> {
         // print all of our items in dest/name.dart
         // if has sub-libraries:
         //  mkdir dest/name/
