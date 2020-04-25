@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate clap;
-
 use ::clap::Clap;
 
 fn main() {
@@ -12,16 +9,18 @@ fn main() {
 }
 
 fn run(opts: Options) -> ::anyhow::Result<()> {
-    ::durt::Package::new(opts.name, opts.crates)?.build(opts.destination)
+    ::durt::Package::new(opts.name, opts.local_durt_lib, opts.crates)?.build(opts.destination)
 }
 
 #[derive(Clap, Debug)]
 #[clap(version = "0.1.0", author = "Louis Feuvrier")]
 struct Options {
-    #[clap(name = "crates", about = "Crates to generate dart code for")]
-    crates: Vec<::std::path::PathBuf>,
-    #[clap(short = "d", long = "dest", about = "Folder to initialize the dart library in")]
-    destination: ::std::path::PathBuf,
     #[clap(short = "n", long = "name", about = "Dart library name")]
     name: String,
+    #[clap(short = "d", long = "dest", about = "Folder to initialize the dart library in")]
+    destination: ::std::path::PathBuf,
+    #[clap(long = "local-durt-lib", about = "Path to local durt library (defaults to online version")]
+    local_durt_lib: Option<::std::path::PathBuf>,
+    #[clap(name = "crates", about = "Crates to generate dart code for")]
+    crates: Vec<::std::path::PathBuf>,
 }

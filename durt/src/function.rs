@@ -5,10 +5,10 @@ impl ::std::fmt::Display for crate::Function {
     }
 }
 
-impl ::std::convert::TryFrom<(String, ::ffishim::Function)> for crate::Function {
+impl ::std::convert::TryFrom<&::ffishim::Function> for crate::Function {
     type Error = ::anyhow::Error;
-    fn try_from((_libname, _f): (String, ::ffishim::Function)) -> ::anyhow::Result<Self> {
-        // fill libname
+    fn try_from(_f: &::ffishim::Function) -> ::anyhow::Result<Self> {
+        // fill libname with "dylib"
         // get ffi_name from ffishim module maybe? TODO
         // iterate args, harvest name and types' .native() and .ffi() implems
         // init ret using type's .native() and .ffi() implems

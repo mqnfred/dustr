@@ -1,3 +1,8 @@
+#[macro_use]
+extern crate serde_derive;
+#[macro_use]
+mod helpers;
+
 #[derive(Debug)]
 pub struct Module {
     name: String,
@@ -10,6 +15,7 @@ mod module;
 #[derive(Debug)]
 pub struct Package {
     name: String,
+    local_durt_lib: Option<::std::path::PathBuf>,
     libraries: Vec<Library>,
 }
 mod package;
@@ -65,6 +71,3 @@ type NativeType = String;
 type FFIType = String;
 
 pub mod types;
-
-#[macro_use]
-mod helpers;

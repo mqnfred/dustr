@@ -19,6 +19,10 @@ clap = { git = "https://github.com/clap-rs/clap/" }
 darling = "^0"
 ffishim = { path = "../../ffishim/ffishim" }
 indoc = "^0"
+itertools = "^0"
 heck = "^0"
 once_cell = "^1"
+serde = "^1"
+serde_derive = "^1"
+serde_yaml = "^0"
 syn = "^1"

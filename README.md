@@ -24,6 +24,7 @@ Generate dart code to interact with rust FFIShim bindings.
 
 ### Testing
 
+ - Make test framework call durt/initialize package
  - Add tests for all basic type behaviors
  - Add a "complete" test/example situation
 
