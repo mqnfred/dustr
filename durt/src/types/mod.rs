@@ -3,6 +3,12 @@ use ::once_cell::sync::Lazy;
 /// The behavior of a `Type` as needed to generate its dart code.
 pub trait Behavior: Sync + Send {
     fn is(&self, sty: &::syn::Type) -> bool;
+
+    fn ffi(&self, sty: &::syn::Type) -> crate::FFIType;
+    fn native(&self, sty: &::syn::Type) -> crate::NativeType;
+
+    fn native_to_ffi(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
+    fn ffi_to_native(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
 }
 
 /// Switch over a given `Type` and return the associated `Behavior`.
