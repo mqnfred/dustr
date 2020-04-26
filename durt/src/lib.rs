@@ -23,12 +23,16 @@ mod package;
 #[derive(Debug)]
 pub struct Library {
     name: String,
-    imports: Vec<String>, // TODO: String best type?
+    imports: Imports,
     functions: Vec<Function>,
     wrappers: Vec<Wrapper>,
     subs: Vec<Library>,
 }
 mod library;
+
+#[derive(Debug)]
+pub struct Imports(Vec<String>);
+mod imports;
 
 #[derive(Debug)]
 pub struct Struct {

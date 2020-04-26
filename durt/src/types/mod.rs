@@ -9,6 +9,9 @@ pub trait Behavior: Sync + Send {
 
     fn native_to_ffi(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
     fn ffi_to_native(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
+
+    // TODO: the String/Option collision is getting old in this file...
+    fn import(&self, sty: &::syn::Type, pkg: &str) -> ::std::option::Option<::std::string::String>;
 }
 
 /// Switch over a given `Type` and return the associated `Behavior`.

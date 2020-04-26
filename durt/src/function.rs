@@ -31,19 +31,25 @@ impl ::std::convert::TryFrom<&::syn::ItemFn> for crate::Function {
 
             name: format!("_{}", f.sig.ident),
             field_types: f.sig.inputs.iter().map(|arg| custom_type_ffi(arg_ty(arg))).collect(),
-            ret_type: ret_ty(f).map(|ty| {
-                custom_type_ffi(&ty)
-            }).unwrap_or("Pointer<Result>".to_owned()),
+            ret_type: custom_type_ffi(&ret_ty(f)),
 
             ffi_name: format!("ffi_{}", f.sig.ident),
             ffi_field_types: f.sig.inputs.iter().map(|arg| {
                 let ty = arg_ty(arg);
                 crate::types::switch(&ty).ffi(&ty)
             }).collect(),
-            ffi_ret_type: ret_ty(f).map(|ty| {
-                crate::types::switch(&ty).ffi(&ty)
-            }).unwrap_or("Pointer<Result>".to_owned()),
+            ffi_ret_type: { let ty = ret_ty(f); crate::types::switch(&ty).ffi(&ty) },
         })
+    }
+}
+
+/// This custom type switch is necessary because in functions' return types, all types except
+/// scalars use their ffi version. Scalars, on the other hand, use their native one (int.)
+fn custom_type_ffi(ty: &::syn::Type) -> String {
+    if crate::types::Scalars.is(ty) {
+        crate::types::Scalars.native(ty)
+    } else {
+        crate::types::switch(ty).ffi(ty)
     }
 }
 
@@ -62,15 +68,5 @@ impl crate::Function {
         // iterate args, harvest name and types' .native() and .ffi() implems
         // no ret type (Void?)
         todo!()
-    }
-}
-
-/// This custom type switch is necessary because in functions' return types, all types except
-/// scalars use their ffi version. Scalars, on the other hand, use their native one (int.)
-fn custom_type_ffi(ty: &::syn::Type) -> String {
-    if crate::types::Scalars.is(ty) {
-        crate::types::Scalars.native(ty)
-    } else {
-        crate::types::switch(ty).ffi(ty)
     }
 }

@@ -1,9 +1,11 @@
 use ::syn::*;
 
-pub fn ret_ty(ifn: &ItemFn) -> Option<&Type> {
+pub fn ret_ty(ifn: &ItemFn) -> Type {
     match &ifn.sig.output {
-        ::syn::ReturnType::Default => None,
-        ::syn::ReturnType::Type(_, ty) => Some(ty.as_ref()),
+        ::syn::ReturnType::Default => parse_quote! {
+            Result<(), ::ffishim::library::Error>
+        },
+        ::syn::ReturnType::Type(_, ty) => *ty.clone(),
     }
 }
 
