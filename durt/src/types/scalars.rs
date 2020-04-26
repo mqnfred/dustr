@@ -41,17 +41,17 @@ static NATIVE_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
 #[allow(dead_code)]
 static FFI_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
-    m.insert("f32", "ffi.Float");
-    m.insert("f64", "ffi.Double");
-    m.insert("u8", "ffi.Uint8");
-    m.insert("u16", "ffi.Uint16");
-    m.insert("u32", "ffi.Uint32");
-    m.insert("u64", "ffi.Uint64");
+    m.insert("f32", "Float");
+    m.insert("f64", "Double");
+    m.insert("u8", "Uint8");
+    m.insert("u16", "Uint16");
+    m.insert("u32", "Uint32");
+    m.insert("u64", "Uint64");
     //m.insert("usize", "int"); TODO un-handled usize/isize scalar types
-    m.insert("i8", "ffi.Int8");
-    m.insert("i16", "ffi.Int16");
-    m.insert("i32", "ffi.Int32");
-    m.insert("i64", "ffi.Int64");
+    m.insert("i8", "Int8");
+    m.insert("i16", "Int16");
+    m.insert("i32", "Int32");
+    m.insert("i64", "Int64");
     //m.insert("isize", "int"); TODO un-handled usize/isize scalar types
     m
 });
@@ -67,8 +67,23 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn ffi(&self, _sty: &Type, _cs: super::CallSite) -> crate::FFIType { todo!() }
-    fn native(&self, _sty: &Type, _cs: super::CallSite) -> crate::NativeType { todo!() }
+    fn ffi(&self, sty: &Type) -> crate::FFIType {
+        if let Type::Path(tp) = sty {
+            let name = tp.path.get_ident().expect(".ffi() with non-scalar type").to_string();
+            FFI_TYPES.get(name.as_str()).expect(".ffi() with non-scalar type").to_string()
+        } else {
+            panic!("cannot call scalar .ffi() with non-scalar type");
+        }
+    }
+
+    fn native(&self, sty: &Type) -> crate::NativeType {
+        if let Type::Path(tp) = sty {
+            let name = tp.path.get_ident().expect(".native() with non-scalar type").to_string();
+            NATIVE_TYPES.get(name.as_str()).expect(".native() with non-scalar type").to_string()
+        } else {
+            panic!("cannot call scalar .native() with non-scalar type");
+        }
+    }
 
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }

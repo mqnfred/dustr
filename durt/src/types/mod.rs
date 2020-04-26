@@ -4,20 +4,11 @@ use ::once_cell::sync::Lazy;
 pub trait Behavior: Sync + Send {
     fn is(&self, sty: &::syn::Type) -> bool;
 
-    fn ffi(&self, sty: &::syn::Type, cs: CallSite) -> crate::FFIType;
-    fn native(&self, sty: &::syn::Type, cs: CallSite) -> crate::NativeType;
+    fn ffi(&self, sty: &::syn::Type) -> crate::FFIType;
+    fn native(&self, sty: &::syn::Type) -> crate::NativeType;
 
     fn native_to_ffi(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
     fn ffi_to_native(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
-}
-
-/// Context on where the type is located.
-///
-/// The FFI API for dart is still alpha, and the behaviors for a given type are not necessarily
-/// consistent across the whole language. This `CallSite` enumeration allows us to provide the
-/// required additional context to the type behavior.
-pub enum CallSite {
-    FunctionReturnType,
 }
 
 /// Switch over a given `Type` and return the associated `Behavior`.

@@ -38,7 +38,7 @@ impl crate::Module {
                     datas.push(derive_input);
                 }
             } else if let ::syn::Item::Fn(ifn) = item {
-                if let Some(func) = process_item_fn(&ifn) {
+                if let Some(func) = filter_item_fn(ifn) {
                     functions.push(func);
                 }
             }
@@ -116,9 +116,9 @@ fn process_item_enum(ie: ::syn::ItemEnum) -> ::anyhow::Result<Option<::ffishim::
     }
 }
 
-fn process_item_fn(ifn: &::syn::ItemFn) -> Option<::ffishim::Function> {
+fn filter_item_fn(ifn: ::syn::ItemFn) -> Option<::syn::ItemFn> {
     if derives_ffishim_use_case(&ifn.attrs) {
-        Some(::ffishim::Function::from_item_fn(ifn))
+        Some(ifn)
     } else {
         None
     }

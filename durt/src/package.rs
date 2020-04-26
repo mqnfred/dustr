@@ -8,11 +8,12 @@ impl crate::Package {
         ::std::fs::create_dir_all(dest.join("lib"))?;
 
         let pubspec = generate_pubspec(self.name.clone(), self.local_durt_lib.clone());
-        std::fs::write(dest.join("pubspec.yaml"), ::serde_yaml::to_string(&pubspec)?)?;
+        ::std::fs::write(dest.join("pubspec.yaml"), ::serde_yaml::to_string(&pubspec)?)?;
         initialize_dependencies(&dest)?;
         for lib in &self.libraries {
             lib.build(&dest.join("lib"))?;
         }
+        ::std::fs::write(dest.join("lib/dylib.dart"), crate::Library::new_dylib(&self.name))?;
 
         Ok(())
     }
@@ -25,10 +26,10 @@ impl crate::Package {
         crate_paths: Vec<::std::path::PathBuf>,
     ) -> ::anyhow::Result<Self> {
         Ok(Self{
-            name,
+            name: name.clone(),
             local_durt_lib,
             libraries: crate_paths.into_iter().map(|path| {
-                crate::Library::try_from(crate::Module::from_crate(path)?)
+                crate::Library::try_from((name.clone(), crate::Module::from_crate(path)?))
             }).collect::<Result<Vec<_>, _>>()?,
         })
     }
@@ -55,6 +56,10 @@ fn generate_pubspec(name: String, local_durt_lib: Option<::std::path::PathBuf>) 
     } else {
         Dependency{version: Some("v0.1.0".to_owned()), path: None}
     });
+    dependencies.insert(
+        "ffi".to_owned(),
+        Dependency{version: Some("^0.1.3-dev.3".to_owned()), path: None},
+    );
 
     Pubspec{name, dependencies, environment: Environment{sdk: ">=2.0.0 <3.0.0".to_owned()}}
 }
@@ -68,7 +73,9 @@ struct Pubspec {
 
 #[derive(Debug, Serialize)]
 pub struct Dependency {
+    #[serde(skip_serializing_if = "Option::is_none")]
     path: Option<::std::path::PathBuf>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     version: Option<String>,
 }
 

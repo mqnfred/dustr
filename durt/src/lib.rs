@@ -7,7 +7,7 @@ mod helpers;
 pub struct Module {
     name: String,
     datas: Vec<::ffishim::Data>,
-    functions: Vec<::ffishim::Function>,
+    functions: Vec<::syn::ItemFn>,
     subs: Vec<Module>,
 }
 mod module;
@@ -44,12 +44,15 @@ mod r#struct;
 
 #[derive(Debug)]
 pub struct Function {
-    libname: String,
+    lib_name: String,
 
     name: String,
+    field_types: Vec<String>,
+    ret_type: String,
+
     ffi_name: String,
-    fields: Vec<(NativeType, FFIType)>,
-    ret: (NativeType, FFIType),
+    ffi_field_types: Vec<String>,
+    ffi_ret_type: String,
 }
 mod function;
 
