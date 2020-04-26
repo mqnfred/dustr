@@ -24,6 +24,8 @@ EOF
 cat > ${dir}/pubspec.yaml <<EOF
 name: ${name}
 dependencies:
+  bindings:
+    path: ../../target/bindings/scalars
   durt:
     path: ../../durt
 environment:
@@ -33,7 +35,7 @@ EOF
 mkdir ${dir}/lib
 cat > ${dir}/lib/main.dart <<EOF
 import 'package:durt/durt.dart';
-import 'bindings.dart';
+import 'package:bindings/${name}.dart';
 
 void main() {
 	alarm();

@@ -2,7 +2,9 @@ use ::std::convert::TryFrom;
 
 impl crate::Package {
     pub fn build(&self, dest: ::std::path::PathBuf) -> ::anyhow::Result<()> {
-        ::std::fs::remove_dir_all(&dest)?;
+        if dest.exists() {
+            ::std::fs::remove_dir_all(&dest)?;
+        }
         ::std::fs::create_dir_all(dest.join("lib"))?;
 
         let pubspec = generate_pubspec(self.name.clone(), self.local_durt_lib.clone());
@@ -22,7 +24,7 @@ impl crate::Package {
         local_durt_lib: Option<::std::path::PathBuf>,
         crate_paths: Vec<::std::path::PathBuf>,
     ) -> ::anyhow::Result<Self> {
-        Ok(crate::Package{
+        Ok(Self{
             name,
             local_durt_lib,
             libraries: crate_paths.into_iter().map(|path| {

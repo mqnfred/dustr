@@ -11,17 +11,24 @@ tests/%/success: tests/%/expected_output tests/%/actual_output
 	touch $@
 
 tests/%/actual_output: tests/%/bin/main.dart \
-	tests/%/bin/bindings.dart \
+	target/bindings/% \
 	target/debug/lib%.so \
 	tests/%/pubspec.lock
 	LD_LIBRARY_PATH=target/debug dart $(word 1,$^) | tee $@
 
-# TODO: this will also generate tests/%/.packages and tests/%/.dart_tool
+# this will also generate tests/%/.packages and tests/%/.dart_tool
 tests/%/pubspec.lock: tests/%/pubspec.yaml
 	cd $(patsubst tests/%/pubspec.lock,tests/%,$@); pub get
 
-#tests/%/bin/bindings.dart: tests/%/src/lib.rs tests/%/Cargo.toml $(DURT_SRC)
-#	cargo run --package durt > $@
+# TODO: something's off here: if updating ffishim library, those tests won't be
+# re-ran as ffishim sources are not part of the dependency. how to fix?
+target/bindings/%: tests/%/src/lib.rs tests/%/Cargo.toml $(DURT_SRC)
+	cargo run \
+		--package durt -- \
+		--dest $@ \
+		--local-durt-lib ../../../durt \
+		--name bindings \
+		$(patsubst target/bindings/%,tests/%,$@)
 
 # TODO: something's off here: if updating ffishim library, those tests won't be
 # re-ran as ffishim sources are not part of the dependency. how to fix?

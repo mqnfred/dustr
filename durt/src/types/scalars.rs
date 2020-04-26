@@ -21,27 +21,45 @@ use ::syn::*;
 ///  - `isize`
 pub struct Behavior;
 
-static NUMBER_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
+static NATIVE_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
-    m.insert("f32", "::ffishim::library::libc::c_float");
-    m.insert("f64", "::ffishim::library::libc::c_double");
-    m.insert("u8", "::ffishim::library::libc::c_char");
-    m.insert("u16", "::ffishim::library::libc::c_ushort");
-    m.insert("u32", "::ffishim::library::libc::c_uint");
-    m.insert("u64", "::ffishim::library::libc::c_ulong");
-    m.insert("usize", "::ffishim::library::libc::size_t");
-    m.insert("i8", "::ffishim::library::libc::c_schar");
-    m.insert("i16", "::ffishim::library::libc::c_short");
-    m.insert("i32", "::ffishim::library::libc::c_int");
-    m.insert("i64", "::ffishim::library::libc::c_long");
-    m.insert("isize", "::ffishim::library::libc::ssize_t");
+    m.insert("f32", "Double");
+    m.insert("f64", "Doubleint");
+    m.insert("u8", "int");
+    m.insert("u16", "int");
+    m.insert("u32", "int");
+    m.insert("u64", "int");
+    //m.insert("usize", "int"); TODO un-handled usize/isize scalar types
+    m.insert("i8", "int");
+    m.insert("i16", "int");
+    m.insert("i32", "int");
+    m.insert("i64", "int");
+    //m.insert("isize", "int"); TODO un-handled usize/isize scalar types
+    m
+});
+
+#[allow(dead_code)]
+static FFI_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+    m.insert("f32", "ffi.Float");
+    m.insert("f64", "ffi.Double");
+    m.insert("u8", "ffi.Uint8");
+    m.insert("u16", "ffi.Uint16");
+    m.insert("u32", "ffi.Uint32");
+    m.insert("u64", "ffi.Uint64");
+    //m.insert("usize", "int"); TODO un-handled usize/isize scalar types
+    m.insert("i8", "ffi.Int8");
+    m.insert("i16", "ffi.Int16");
+    m.insert("i32", "ffi.Int32");
+    m.insert("i64", "ffi.Int64");
+    //m.insert("isize", "int"); TODO un-handled usize/isize scalar types
     m
 });
 
 impl super::Behavior for Behavior {
     fn is(&self, sty: &Type) -> bool {
         if let Type::Path(tp) = sty {
-            NUMBER_TYPES.keys().any(|t| {
+            NATIVE_TYPES.keys().any(|t| {
                 ::syn::parse_str::<::syn::Path>(t).unwrap() == tp.path
             })
         } else {

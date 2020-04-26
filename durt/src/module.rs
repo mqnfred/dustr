@@ -2,7 +2,8 @@ use ::darling::FromDeriveInput;
 
 impl crate::Module {
     pub fn from_crate(path: ::std::path::PathBuf) -> ::anyhow::Result<Self> {
-        let name = ::cargo_toml::Manifest::from_path(&path)?.package.ok_or_else(|| {
+        let manifest = ::cargo_toml::Manifest::from_path(&path.join("Cargo.toml"))?;
+        let name = manifest.package.ok_or_else(|| {
             ::anyhow::Error::msg(format!("empty [package] section for {}", path.display()))
         })?.name.to_lowercase();
         Self::from_file(name, path.join("src/lib.rs"))
@@ -12,9 +13,7 @@ impl crate::Module {
         Self::from_items(
             name,
             path.clone(),
-            ::syn::parse_file(path.to_str().ok_or_else(|| {
-                ::anyhow::Error::msg(format!("path {} is not valid unicode", path.display()))
-            })?)?.items,
+            ::syn::parse_file(&::std::fs::read_to_string(path)?)?.items,
         )
     }
 

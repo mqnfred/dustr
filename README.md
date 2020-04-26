@@ -21,6 +21,7 @@ Generate dart code to interact with rust FFIShim bindings.
    4. Foreign
    5. Vec
  - How to represent enums/tagged unions properly in dart? protobuf `oneof`?
+ - Find equivalent dart type for usize/isize
 
 ### Testing
 

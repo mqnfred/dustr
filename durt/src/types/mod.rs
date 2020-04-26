@@ -17,7 +17,7 @@ pub trait Behavior: Sync + Send {
 /// consistent across the whole language. This `CallSite` enumeration allows us to provide the
 /// required additional context to the type behavior.
 pub enum CallSite {
-    
+    FunctionReturnType,
 }
 
 /// Switch over a given `Type` and return the associated `Behavior`.

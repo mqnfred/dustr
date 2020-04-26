@@ -1,5 +1,7 @@
 name: scalars
 dependencies:
+  bindings:
+    path: ../../target/bindings/scalars
   durt:
     path: ../../durt
 environment:
