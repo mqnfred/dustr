@@ -39,9 +39,6 @@ impl ::std::convert::TryFrom<(String, crate::Module)> for crate::Library {
 
 impl crate::Library {
     pub fn new_dylib(pkg: &str) -> String {
-        // TODO: the free_result function should probably not be declared here... but it's
-        // impossible to declare within the durt/result.dart library since it does not have access
-        // to dylib.
         format!(
             "import 'dart:ffi';\n\
             \n\
