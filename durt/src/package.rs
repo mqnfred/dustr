@@ -7,27 +7,23 @@ impl crate::Package {
         }
         ::std::fs::create_dir_all(dest.join("lib"))?;
 
-        let pubspec = generate_pubspec(self.name.clone(), self.local_durt_lib.clone());
+        let pubspec = generate_pubspec(self.name.clone());
         ::std::fs::write(dest.join("pubspec.yaml"), ::serde_yaml::to_string(&pubspec)?)?;
         initialize_dependencies(&dest)?;
         for lib in &self.libraries {
             lib.build(&dest.join("lib"))?;
         }
         ::std::fs::write(dest.join("lib/dylib.dart"), crate::Library::new_dylib(&self.name))?;
+        copy_durt_lib(&dest)?;
 
         Ok(())
     }
 }
 
 impl crate::Package {
-    pub fn new(
-        name: String,
-        local_durt_lib: Option<::std::path::PathBuf>,
-        crate_paths: Vec<::std::path::PathBuf>,
-    ) -> ::anyhow::Result<Self> {
+    pub fn new(name: String, crate_paths: Vec<::std::path::PathBuf>) -> ::anyhow::Result<Self> {
         Ok(Self{
             name: name.clone(),
-            local_durt_lib,
             libraries: crate_paths.into_iter().map(|path| {
                 crate::Library::try_from((name.clone(), crate::Module::from_crate(path)?))
             }).collect::<Result<Vec<_>, _>>()?,
@@ -49,18 +45,19 @@ fn initialize_dependencies(dest: &::std::path::PathBuf) -> ::anyhow::Result<()> 
     }
 }
 
-fn generate_pubspec(name: String, local_durt_lib: Option<::std::path::PathBuf>) -> Pubspec {
+fn copy_durt_lib(dest: &::std::path::PathBuf) -> ::anyhow::Result<()> {
+    ::std::fs::create_dir_all(dest.join("lib/durt"))?;
+    ::std::fs::write(dest.join("lib/durt/durt.dart"), include_str!("../lib/durt.dart"))?;
+    ::std::fs::write(dest.join("lib/durt/result.dart"), include_str!("../lib/result.dart"))?;
+    Ok(())
+}
+
+fn generate_pubspec(name: String) -> Pubspec {
     let mut dependencies = ::std::collections::HashMap::new();
-    dependencies.insert("durt".to_owned(), if let Some(path) = local_durt_lib {
-        Dependency{version: None, path: Some(path)}
-    } else {
-        Dependency{version: Some("v0.1.0".to_owned()), path: None}
-    });
     dependencies.insert(
         "ffi".to_owned(),
         Dependency{version: Some("^0.1.3-dev.3".to_owned()), path: None},
     );
-
     Pubspec{name, dependencies, environment: Environment{sdk: ">=2.0.0 <3.0.0".to_owned()}}
 }
 
@@ -72,7 +69,7 @@ struct Pubspec {
 }
 
 #[derive(Debug, Serialize)]
-pub struct Dependency {
+struct Dependency {
     #[serde(skip_serializing_if = "Option::is_none")]
     path: Option<::std::path::PathBuf>,
     #[serde(skip_serializing_if = "Option::is_none")]

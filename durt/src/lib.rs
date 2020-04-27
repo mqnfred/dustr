@@ -15,7 +15,6 @@ mod module;
 #[derive(Debug)]
 pub struct Package {
     name: String,
-    local_durt_lib: Option<::std::path::PathBuf>,
     libraries: Vec<Library>,
 }
 mod package;

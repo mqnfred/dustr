@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import '../dylib.dart';
 
 class Error implements Exception {
 	final String message;
@@ -19,3 +20,7 @@ class Result extends Struct {
 		return Pointer<T>.fromAddress(payload.address);
 	}
 }
+
+final void Function(Pointer<Result>) freeResult = dylib.lookup<
+	NativeFunction<Void Function(Pointer<Result>)>
+>('free_result').asFunction();

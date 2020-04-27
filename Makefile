@@ -14,7 +14,7 @@ tests/%/actual_output: tests/%/bin/main.dart \
 	target/bindings/% \
 	target/debug/lib%.so \
 	tests/%/pubspec.lock
-	LD_LIBRARY_PATH=target/debug/deps dart $(word 1,$^) | tee $@
+	LD_LIBRARY_PATH=target/debug dart $(word 1,$^) | tee $@
 
 # this will also generate tests/%/.packages and tests/%/.dart_tool
 tests/%/pubspec.lock: tests/%/pubspec.yaml
@@ -26,7 +26,6 @@ target/bindings/%: tests/%/src/lib.rs tests/%/Cargo.toml $(DURT_SRC)
 	cargo run \
 		--package durt -- \
 		--dest $@ \
-		--local-durt-lib ../../../durt \
 		--name bindings \
 		$(patsubst target/bindings/%,tests/%,$@)
 

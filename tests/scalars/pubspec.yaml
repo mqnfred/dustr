@@ -2,7 +2,5 @@ name: scalars
 dependencies:
   bindings:
     path: ../../target/bindings/scalars
-  durt:
-    path: ../../durt
 environment:
   sdk: '>=2.0.0 <3.0.0'

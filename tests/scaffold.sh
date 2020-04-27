@@ -26,19 +26,16 @@ name: ${name}
 dependencies:
   bindings:
     path: ../../target/bindings/scalars
-  durt:
-    path: ../../durt
 environment:
   sdk: '>=2.0.0 <3.0.0'
 EOF
 
 mkdir ${dir}/lib
 cat > ${dir}/lib/main.dart <<EOF
-import 'package:durt/durt.dart';
 import 'package:bindings/${name}.dart';
 
 void main() {
-	alarm();
+	print("Hello, world!");
 }
 EOF
 

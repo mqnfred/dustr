@@ -9,7 +9,7 @@ fn main() {
 }
 
 fn run(opts: Options) -> ::anyhow::Result<()> {
-    ::durt::Package::new(opts.name, opts.local_durt_lib, opts.crates)?.build(opts.destination)
+    ::durt::Package::new(opts.name, opts.crates)?.build(opts.destination)
 }
 
 #[derive(Clap, Debug)]
@@ -19,8 +19,6 @@ struct Options {
     name: String,
     #[clap(short = "d", long = "dest", about = "Folder to initialize the dart library in")]
     destination: ::std::path::PathBuf,
-    #[clap(long = "local-durt-lib", about = "Path to local durt library (defaults to online version")]
-    local_durt_lib: Option<::std::path::PathBuf>,
     #[clap(name = "crates", about = "Crates to generate dart code for")]
     crates: Vec<::std::path::PathBuf>,
 }

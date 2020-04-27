@@ -44,14 +44,8 @@ impl crate::Library {
         // to dylib.
         format!(
             "import 'dart:ffi';\n\
-            import 'package:durt/result.dart';\n\
             \n\
-            final dylib = DynamicLibrary.open('lib{lib_name}.so');\n\
-            \n\
-            final void Function(Pointer<Result>) freeResult = \
-            dylib.lookup<NativeFunction<\
-                Void Function(Pointer<Result>)>\
-            >('free_result').asFunction();\n",
+            final dylib = DynamicLibrary.open('lib{lib_name}.so');\n",
             lib_name = pkg,
         )
     }
