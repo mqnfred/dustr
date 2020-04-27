@@ -18,14 +18,12 @@ impl crate::Imports {
         let mut imports = vec![format!("package:{}/dylib.dart", &pkg)];
 
         let ty = ret_ty(ifn);
-        if let Some(import) = crate::types::switch(&ty).import(&ty, pkg) {
-            imports.push(import);
-        }
+        imports.extend(crate::types::switch(&ty).imports(&ty, pkg));
 
-        imports.extend(ifn.sig.inputs.iter().filter_map(|arg| {
+        imports.extend(ifn.sig.inputs.iter().map(|arg| {
             let ty = arg_ty(arg);
-            crate::types::switch(&ty).import(&ty, pkg)
-        }));
+            crate::types::switch(&ty).imports(&ty, pkg)
+        }).flatten());
 
         let mut s = Self(imports);
         s.remove_duplicates();

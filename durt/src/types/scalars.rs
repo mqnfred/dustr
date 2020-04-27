@@ -85,8 +85,15 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
-    fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
+    fn native_to_ffi(&self, _sty: &Type, expr: String) -> String {
+        expr
+    }
 
-    fn import(&self, _sty: &Type, _pkg: &str) -> Option<String> { todo!() }
+    fn ffi_to_native(&self, _sty: &Type, expr: String) -> String {
+        expr
+    }
+
+    fn imports(&self, _sty: &Type, _pkg: &str) -> Vec<String> {
+        vec!["dart:ffi".to_owned()]
+    }
 }

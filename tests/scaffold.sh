@@ -17,7 +17,7 @@ ffishim = { path = "../../../../ffishim/ffishim" }
 ffishim_derive = { path = "../../../ffishim/ffishim_derive" }
 
 [lib]
-name = "${name}"
+name = "bindings"
 crate-type = ["cdylib"]
 EOF
 

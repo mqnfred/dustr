@@ -63,8 +63,8 @@ mod function;
 #[derive(Debug)]
 pub struct Wrapper {
     name: String,
-    fields: Vec<(NativeType, String)>,
-    ret: NativeType,
+    fields: Vec<(String, String)>,
+    ret: String,
 
     func_name: String,
     field_conversions: Vec<String>,

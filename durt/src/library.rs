@@ -26,11 +26,10 @@ impl ::std::convert::TryFrom<(String, crate::Module)> for crate::Library {
     type Error = ::anyhow::Error;
     fn try_from((pkg, m): (String, crate::Module)) -> ::anyhow::Result<Self> {
         Ok(Self{
+            name: m.name.clone(),
             imports: crate::Imports::from_module(&pkg, &m),
-            name: m.name,
             functions: m.functions.iter().map(|f| f.try_into()).collect::<Result<Vec<_>, _>>()?,
-            wrappers: vec![],
-            //wrappers: m.functions.iter().map(|f| f.try_into()).collect::<Result<Vec<_>, _>>()?,
+            wrappers: m.functions.iter().map(|f| f.try_into()).collect::<Result<Vec<_>, _>>()?,
             subs: m.subs.into_iter().map(|m| {
                 Self::try_from((pkg.clone(), m))
             }).collect::<Result<Vec<_>, _>>()?,
@@ -40,8 +39,19 @@ impl ::std::convert::TryFrom<(String, crate::Module)> for crate::Library {
 
 impl crate::Library {
     pub fn new_dylib(pkg: &str) -> String {
+        // TODO: the free_result function should probably not be declared here... but it's
+        // impossible to declare within the durt/result.dart library since it does not have access
+        // to dylib.
         format!(
-            "import 'dart:ffi';\nfinal dylib = DynamicLibrary.open('lib{lib_name}.so');\n",
+            "import 'dart:ffi';\n\
+            import 'package:durt/result.dart';\n\
+            \n\
+            final dylib = DynamicLibrary.open('lib{lib_name}.so');\n\
+            \n\
+            final void Function(Pointer<Result>) freeResult = \
+            dylib.lookup<NativeFunction<\
+                Void Function(Pointer<Result>)>\
+            >('free_result').asFunction();\n",
             lib_name = pkg,
         )
     }

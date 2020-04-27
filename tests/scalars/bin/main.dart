@@ -2,5 +2,6 @@ import 'package:durt/durt.dart';
 import 'package:bindings/scalars.dart';
 
 void main() {
-	alarm();
+	var a = add(2, 3);
+	print("$a");
 }

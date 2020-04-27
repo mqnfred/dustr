@@ -13,11 +13,23 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn ffi(&self, _sty: &Type) -> crate::FFIType { todo!() }
-    fn native(&self, _sty: &Type) -> crate::NativeType { todo!() }
+    fn ffi(&self, _sty: &Type) -> String {
+        "Pointer<Result>".to_owned()
+    }
+
+    fn native(&self, _sty: &Type) -> String {
+        "Result".to_owned()
+    }
 
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
 
-    fn import(&self, _sty: &Type, _pkg: &str) -> Option<String> { todo!() }
+    fn imports(&self, sty: &Type, pkg: &str) -> Vec<String> {
+        let mut imports = vec!["dart:ffi".to_owned(), "package:durt/result.dart".to_owned()];
+
+        let subtype = subtype(sty.clone());
+        imports.extend(crate::types::switch(&subtype).imports(&subtype, pkg));
+
+        imports
+    }
 }
