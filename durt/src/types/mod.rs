@@ -9,12 +9,9 @@ pub trait Behavior: Sync + Send {
     fn ffi(&self, sty: &Type) -> String;
     fn native(&self, sty: &Type) -> String;
 
-    fn annotation(&self, sty: &Type) -> Option<String>;
-
     fn native_to_ffi(&self, sty: &Type, expr: String) -> String;
     fn ffi_to_native(&self, sty: &Type, expr: String) -> String;
 
-    // TODO: the String/Option collision is getting old in this file...
     fn imports(&self, sty: &Type, pkg: &str) -> Vec<String>;
 }
 
@@ -32,33 +29,27 @@ pub fn switch<'a, 'b>(sty: &'a Type) -> &'b Box<dyn Behavior> {
 static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
     vec![
         // End-types
-        Box::new(BehaviorScalars),
-        Box::new(BehaviorString),
+        Box::new(scalars::Behavior),
+        Box::new(string::Behavior),
 
         // Parameterized types
-        Box::new(BehaviorOption),
-        Box::new(BehaviorResult),
-        Box::new(BehaviorVec),
+        Box::new(option::Behavior),
+        Box::new(result::Behavior),
+        Box::new(vec::Behavior),
 
         // Foreign/custom types implementing an ffi shim
-        Box::new(BehaviorForeign),
+        Box::new(foreign::Behavior),
     ]
 });
 
 // End-types
-mod scalars;
-pub use scalars::BehaviorScalars;
+mod scalars; pub use scalars::Behavior as BehaviorScalars;
 mod string;
-pub use string::BehaviorString;
 
 // Parameterized types
 mod option;
-pub use option::BehaviorOption;
-mod result;
-pub use result::BehaviorResult;
+mod result; pub use result::Behavior as BehaviorResult;
 mod vec;
-pub use vec::BehaviorVec;
 
 // Foreign/custom types implementing an ffi shim
 mod foreign;
-pub use foreign::BehaviorForeign;

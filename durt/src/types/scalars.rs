@@ -19,7 +19,7 @@ use ::syn::*;
 ///  - `i32`
 ///  - `i64`
 ///  - `isize`
-pub struct BehaviorScalars;
+pub struct Behavior;
 
 static NATIVE_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
@@ -56,7 +56,7 @@ static SHIM_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     m
 });
 
-impl super::Behavior for BehaviorScalars {
+impl super::Behavior for Behavior {
     fn is(&self, sty: &Type) -> bool {
         if let Type::Path(tp) = sty {
             NATIVE_TYPES.keys().any(|t| {
@@ -69,8 +69,8 @@ impl super::Behavior for BehaviorScalars {
 
     fn shim(&self, sty: &Type) -> String {
         if let Type::Path(tp) = sty {
-            let name = tp.path.get_ident().expect(".ffi() with non-scalar type").to_string();
-            SHIM_TYPES.get(name.as_str()).expect(".ffi() with non-scalar type").to_string()
+            let name = tp.path.get_ident().expect(".shim() with non-scalar type").to_string();
+            SHIM_TYPES.get(name.as_str()).expect(".shim() with non-scalar type").to_string()
         } else {
             panic!("cannot call scalar .ffi() with non-scalar type");
         }
@@ -86,15 +86,6 @@ impl super::Behavior for BehaviorScalars {
             NATIVE_TYPES.get(name.as_str()).expect(".native() with non-scalar type").to_string()
         } else {
             panic!("cannot call scalar .native() with non-scalar type");
-        }
-    }
-
-    fn annotation(&self, sty: &Type) -> Option<String> {
-        if let Type::Path(tp) = sty {
-            let name = tp.path.get_ident().expect(".native() with non-scalar type").to_string();
-            SHIM_TYPES.get(name.as_str()).map(|s| format!("@{}", s))
-        } else {
-            None
         }
     }
 

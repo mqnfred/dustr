@@ -2,9 +2,9 @@ use ::syn::*;
 use crate::helpers::*;
 
 /// The std lib's `Option` type behavior.
-pub struct BehaviorOption;
+pub struct Behavior;
 
-impl super::Behavior for BehaviorOption {
+impl super::Behavior for Behavior {
     fn is(&self, sty: &Type) -> bool {
         if let Type::Path(tp) = sty {
             is_same_id(&tp.path, "Option")
@@ -15,7 +15,6 @@ impl super::Behavior for BehaviorOption {
 
     fn ffi(&self, _sty: &Type) -> String { todo!() }
     fn native(&self, _sty: &Type) -> String { todo!() }
-    fn annotation(&self, _sty: &Type) -> Option<String> { todo!() }
 
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }

@@ -1,6 +1,7 @@
 use ::heck::{MixedCase,SnakeCase};
 use ::itertools::Itertools;
 use crate::helpers::*;
+use crate::types::Behavior;
 
 impl ::std::fmt::Display for crate::Struct {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
@@ -33,10 +34,11 @@ impl ::std::convert::TryFrom<::ffishim::Data> for crate::Struct {
     fn try_from(d: ::ffishim::Data) -> ::anyhow::Result<Self> {
         let fields = unwrap_fields(&d);
 
-        let field_decls = fields.iter().enumerate().map(|(idx, f)| {
-            let behavior = crate::types::switch(&f.ty);
-            (behavior.annotation(&f.ty), behavior.ffi(&f.ty), format!("_{}", name_of_field(idx as u32, &f.ident)))
-        }).collect();
+        let field_decls = fields.iter().enumerate().map(|(idx, f)| (
+                annotation(&f.ty),
+                crate::types::switch(&f.ty).ffi(&f.ty),
+                format!("_{}", name_of_field(idx as u32, &f.ident)),
+        )).collect();
         let field_getters = fields.iter().enumerate().map(|(idx, f)| {
             let behavior = crate::types::switch(&f.ty);
             let name = name_of_field(idx as u32, &f.ident);
@@ -46,6 +48,14 @@ impl ::std::convert::TryFrom<::ffishim::Data> for crate::Struct {
         let free_func = crate::Function::free_from_data(&d)?;
 
         Ok(Self{name: d.ident.to_string(), field_decls, field_getters, new_func, free_func})
+    }
+}
+
+fn annotation(sty: &::syn::Type) -> Option<String> {
+    if crate::types::BehaviorScalars.is(sty) {
+        Some(format!("@{}", crate::types::BehaviorScalars.shim(sty)))
+    } else {
+        None
     }
 }
 
