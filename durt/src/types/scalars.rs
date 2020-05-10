@@ -23,8 +23,8 @@ pub struct Behavior;
 
 static NATIVE_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
-    m.insert("f32", "Double");
-    m.insert("f64", "Doubleint");
+    m.insert("f32", "double");
+    m.insert("f64", "double");
     m.insert("u8", "int");
     m.insert("u16", "int");
     m.insert("u32", "int");

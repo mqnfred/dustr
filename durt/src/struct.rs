@@ -17,8 +17,8 @@ impl ::std::fmt::Display for crate::Struct {
             name = self.name,
             field_decls = self.field_decls.iter().map(|(a, t, n)| {
                 a.as_ref().map(|a| {
-                    format!("{} {} {}", a, t, n)
-                }).unwrap_or_else(|| format!("{} {}", t, n))
+                    format!("{} {} {};", a, t, n)
+                }).unwrap_or_else(|| format!("{} {};", t, n))
             }).join("\n"),
             field_getters = self.field_getters.iter().map(|(nat, name, expr)| {
                 format!("{} get {} => {};", nat, name, expr)
@@ -29,10 +29,10 @@ impl ::std::fmt::Display for crate::Struct {
     }
 }
 
-impl ::std::convert::TryFrom<::ffishim::Data> for crate::Struct {
+impl ::std::convert::TryFrom<&::ffishim::Data> for crate::Struct {
     type Error = ::anyhow::Error;
-    fn try_from(d: ::ffishim::Data) -> ::anyhow::Result<Self> {
-        let fields = unwrap_fields(&d);
+    fn try_from(d: &::ffishim::Data) -> ::anyhow::Result<Self> {
+        let fields = unwrap_fields(d);
 
         let field_decls = fields.iter().enumerate().map(|(idx, f)| (
                 annotation(&f.ty),
@@ -44,7 +44,7 @@ impl ::std::convert::TryFrom<::ffishim::Data> for crate::Struct {
             let name = name_of_field(idx as u32, &f.ident);
             (behavior.native(&f.ty), name.clone(), behavior.ffi_to_native(&f.ty, name))
         }).collect();
-        let new_func = generate_new(&d)?;
+        let new_func = generate_new(d)?;
         let free_func = crate::Function::free_from_data(&d)?;
 
         Ok(Self{name: d.ident.to_string(), field_decls, field_getters, new_func, free_func})
@@ -53,7 +53,7 @@ impl ::std::convert::TryFrom<::ffishim::Data> for crate::Struct {
 
 fn annotation(sty: &::syn::Type) -> Option<String> {
     if crate::types::BehaviorScalars.is(sty) {
-        Some(format!("@{}", crate::types::BehaviorScalars.shim(sty)))
+        Some(format!("@{}()", crate::types::BehaviorScalars.shim(sty)))
     } else {
         None
     }
@@ -73,7 +73,7 @@ fn generate_new(d: &::ffishim::Data) -> ::anyhow::Result<crate::Function> {
         ret_type: format!("Pointer<{}>", d.ident),
 
         shim_name,
-        shim_field_types: fields.iter().map(|f| crate::types::switch(&f.ty).ffi(&f.ty)).collect(),
+        shim_field_types: fields.iter().map(|f| crate::types::switch(&f.ty).shim(&f.ty)).collect(),
         shim_ret_type: format!("Pointer<{}>", d.ident),
     })
 }

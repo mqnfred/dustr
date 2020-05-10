@@ -6,3 +6,9 @@ extern crate ffishim_derive;
 fn add(a: u32, b: u32) -> u32 {
     a + b
 }
+
+#[derive(FFIShim)]
+pub struct GPS {
+    lat: f64,
+    lon: f64,
+}

@@ -24,6 +24,7 @@ mod package;
 pub struct Library {
     name: String,
     imports: Imports,
+    structs: Vec<Struct>,
     functions: Vec<Function>,
     wrappers: Vec<Wrapper>,
     subs: Vec<Library>,
