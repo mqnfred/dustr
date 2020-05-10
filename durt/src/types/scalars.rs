@@ -19,7 +19,7 @@ use ::syn::*;
 ///  - `i32`
 ///  - `i64`
 ///  - `isize`
-pub struct Behavior;
+pub struct BehaviorScalars;
 
 static NATIVE_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
@@ -56,11 +56,11 @@ static SHIM_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     m
 });
 
-impl super::Behavior for Behavior {
+impl super::Behavior for BehaviorScalars {
     fn is(&self, sty: &Type) -> bool {
         if let Type::Path(tp) = sty {
             NATIVE_TYPES.keys().any(|t| {
-                ::syn::parse_str::<::syn::Path>(t).unwrap() == tp.path
+                parse_str::<Path>(t).unwrap() == tp.path
             })
         } else {
             false

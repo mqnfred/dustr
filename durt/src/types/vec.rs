@@ -2,9 +2,9 @@ use crate::helpers::*;
 use ::syn::*;
 
 /// The std lib's `Vec` type behavior, backed by ffishim library's `FFIVec`.
-pub struct Behavior;
+pub struct BehaviorVec;
 
-impl super::Behavior for Behavior {
+impl super::Behavior for BehaviorVec {
     fn is(&self, sty: &Type) -> bool {
         if let Type::Path(tp) = sty {
             is_same_id(&tp.path, "Vec")

@@ -1,20 +1,21 @@
 use ::once_cell::sync::Lazy;
+use ::syn::*;
 
 /// The behavior of a `Type` as needed to generate its dart code.
 pub trait Behavior: Sync + Send {
-    fn is(&self, sty: &::syn::Type) -> bool;
+    fn is(&self, sty: &Type) -> bool;
 
-    fn shim(&self, sty: &::syn::Type) -> ::std::string::String { self.ffi(sty) }
-    fn ffi(&self, sty: &::syn::Type) -> ::std::string::String;
-    fn native(&self, sty: &::syn::Type) -> ::std::string::String;
+    fn shim(&self, sty: &Type) -> String { self.ffi(sty) }
+    fn ffi(&self, sty: &Type) -> String;
+    fn native(&self, sty: &Type) -> String;
 
-    fn annotation(&self, sty: &::syn::Type) -> ::std::option::Option<::std::string::String>;
+    fn annotation(&self, sty: &Type) -> Option<String>;
 
-    fn native_to_ffi(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
-    fn ffi_to_native(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
+    fn native_to_ffi(&self, sty: &Type, expr: String) -> String;
+    fn ffi_to_native(&self, sty: &Type, expr: String) -> String;
 
     // TODO: the String/Option collision is getting old in this file...
-    fn imports(&self, sty: &::syn::Type, pkg: &str) -> Vec<::std::string::String>;
+    fn imports(&self, sty: &Type, pkg: &str) -> Vec<String>;
 }
 
 /// Switch over a given `Type` and return the associated `Behavior`.
@@ -22,7 +23,7 @@ pub trait Behavior: Sync + Send {
 /// This is an open-ended, c-style switch: if two different type behaviors' `is` method return
 /// `true`, the first one in the list will win. You can order the type behaviors in the
 /// `BEHAVIORS` vector.
-pub fn switch<'a, 'b>(sty: &'a ::syn::Type) -> &'b Box<dyn Behavior> {
+pub fn switch<'a, 'b>(sty: &'a Type) -> &'b Box<dyn Behavior> {
     // TODO: give more context about which type we do not find the behavior of
     BEHAVIORS.iter().find(|tyb| tyb.is(sty)).expect("cannot find behavior for given type")
 }
@@ -31,33 +32,33 @@ pub fn switch<'a, 'b>(sty: &'a ::syn::Type) -> &'b Box<dyn Behavior> {
 static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
     vec![
         // End-types
-        Box::new(Scalars),
-        Box::new(String),
+        Box::new(BehaviorScalars),
+        Box::new(BehaviorString),
 
         // Parameterized types
-        Box::new(Option),
-        Box::new(Result),
-        Box::new(Vector),
+        Box::new(BehaviorOption),
+        Box::new(BehaviorResult),
+        Box::new(BehaviorVec),
 
         // Foreign/custom types implementing an ffi shim
-        Box::new(Foreign),
+        Box::new(BehaviorForeign),
     ]
 });
 
 // End-types
 mod scalars;
-pub use scalars::Behavior as Scalars;
+pub use scalars::BehaviorScalars;
 mod string;
-pub use string::Behavior as String;
+pub use string::BehaviorString;
 
 // Parameterized types
 mod option;
-pub use option::Behavior as Option;
+pub use option::BehaviorOption;
 mod result;
-pub use result::Behavior as Result;
+pub use result::BehaviorResult;
 mod vec;
-pub use vec::Behavior as Vector;
+pub use vec::BehaviorVec;
 
 // Foreign/custom types implementing an ffi shim
 mod foreign;
-pub use foreign::Behavior as Foreign;
+pub use foreign::BehaviorForeign;

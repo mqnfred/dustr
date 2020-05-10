@@ -4,9 +4,9 @@ use ::syn::*;
 ///
 /// If a type is unknown (meaning it did not match any pre-defined `Behavior`,) we consider it by
 /// default to be a `Foreign` type: a type defined by the user that itself implements the ffi shim.
-pub struct Behavior;
+pub struct BehaviorForeign;
 
-impl super::Behavior for Behavior {
+impl super::Behavior for BehaviorForeign {
     fn is(&self, _: &Type) -> bool {
         true
     }

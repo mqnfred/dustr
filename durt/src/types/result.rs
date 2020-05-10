@@ -2,9 +2,9 @@ use crate::helpers::*;
 use ::syn::*;
 
 /// The std lib's `Result` type behavior.
-pub struct Behavior;
+pub struct BehaviorResult;
 
-impl super::Behavior for Behavior {
+impl super::Behavior for BehaviorResult {
     fn is(&self, sty: &Type) -> bool {
         if let Type::Path(tp) = sty {
             is_same_id(&tp.path, "Result")

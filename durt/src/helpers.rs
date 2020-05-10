@@ -27,7 +27,7 @@ pub fn ret_ty(ifn: &ItemFn) -> Type {
         ::syn::ReturnType::Default => parse_quote! {
             Result<(), ::ffishim::library::Error>
         },
-        ::syn::ReturnType::Type(_, ty) => if crate::types::Result.is(ty.as_ref()) {
+        ::syn::ReturnType::Type(_, ty) => if crate::types::BehaviorResult.is(ty.as_ref()) {
             *ty.clone()
         } else {
             parse_quote! { Result<#ty, ::ffishim::library::Error> }
