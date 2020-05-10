@@ -6,7 +6,8 @@ mod helpers;
 #[derive(Debug)]
 pub struct Module {
     name: String,
-    datas: Vec<::ffishim::Data>,
+    structs: Vec<::ffishim::Data>,
+    enums: Vec<::ffishim::Data>,
     functions: Vec<::syn::ItemFn>,
     subs: Vec<Module>,
 }
@@ -37,8 +38,8 @@ mod imports;
 pub struct Struct {
     name: String,
 
-    field_decls: Vec<(FFIType, String)>,
-    field_getters: Vec<(NativeType, String, String)>, // native type, getter name, expr
+    field_decls: Vec<(Option<String>, String, String)>, // type annotation, ffi type, field name
+    field_getters: Vec<(String, String, String)>,       // native type, name, expr
 
     new_func: Function,
     free_func: Function,
@@ -72,8 +73,5 @@ pub struct Wrapper {
     result_cast: Option<String>,
 }
 mod wrapper;
-
-type NativeType = String;
-type FFIType = String;
 
 pub mod types;

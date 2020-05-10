@@ -22,7 +22,8 @@ impl crate::Module {
         path: ::std::path::PathBuf,
         items: Vec<::syn::Item>,
     ) -> ::anyhow::Result<Self> {
-        let mut datas = vec![];
+        let mut structs = vec![];
+        let mut enums = vec![];
         let mut functions = vec![];
         let mut subs = vec![];
 
@@ -30,12 +31,12 @@ impl crate::Module {
             if let ::syn::Item::Mod(im) = item {
                 subs.push(Self::from_itemmod(path.clone(), im)?);
             } else if let ::syn::Item::Struct(is) = item {
-                if let Some(derive_input) = process_item_struct(is)? {
-                    datas.push(derive_input);
+                if let Some(data) = filter_item_struct(is)? {
+                    structs.push(data);
                 }
             } else if let ::syn::Item::Enum(ie) = item {
-                if let Some(derive_input) = process_item_enum(ie)? {
-                    datas.push(derive_input);
+                if let Some(data) = filter_item_enum(ie)? {
+                    enums.push(data);
                 }
             } else if let ::syn::Item::Fn(ifn) = item {
                 if let Some(func) = filter_item_fn(ifn) {
@@ -44,7 +45,7 @@ impl crate::Module {
             }
         }
 
-        Ok(Self{name, datas, functions, subs})
+        Ok(Self{name, structs, enums, functions, subs})
     }
 
     pub fn from_itemmod(
@@ -72,7 +73,7 @@ impl crate::Module {
     }
 }
 
-fn process_item_struct(is: ::syn::ItemStruct) -> ::anyhow::Result<Option<::ffishim::Data>> {
+fn filter_item_struct(is: ::syn::ItemStruct) -> ::anyhow::Result<Option<::ffishim::Data>> {
     if derives_ffishim(&is.attrs) {
         let derive_input = ::syn::DeriveInput{
             attrs: is.attrs.clone(),
@@ -94,7 +95,7 @@ fn process_item_struct(is: ::syn::ItemStruct) -> ::anyhow::Result<Option<::ffish
     }
 }
 
-fn process_item_enum(ie: ::syn::ItemEnum) -> ::anyhow::Result<Option<::ffishim::Data>> {
+fn filter_item_enum(ie: ::syn::ItemEnum) -> ::anyhow::Result<Option<::ffishim::Data>> {
     if derives_ffishim(&ie.attrs) {
         let derive_input = ::syn::DeriveInput{
             attrs: ie.attrs.clone(),

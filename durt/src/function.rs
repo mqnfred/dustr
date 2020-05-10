@@ -1,3 +1,4 @@
+use ::heck::{MixedCase,SnakeCase};
 use ::itertools::Itertools;
 use crate::helpers::*;
 use crate::types::Behavior;
@@ -54,19 +55,21 @@ fn custom_type_ffi(ty: &::syn::Type) -> String {
 }
 
 impl crate::Function {
-    pub fn new_from_data(_libname: String, _d: &::ffishim::Data) -> ::anyhow::Result<Self> {
-        // fill libname
-        // get ffi_name from name new_data
-        // iterate args, harvest name and types' .native() and .ffi() implems
-        // ret type should be ffi.Pointer<d>?
-        todo!()
-    }
+    pub fn free_from_data(d: &::ffishim::Data) -> ::anyhow::Result<Self> {
+        let ffi_name = format!("free_{}", d.ident.to_string().to_snake_case());
 
-    pub fn free_from_data(_libname: String, _d: &::ffishim::Data) -> ::anyhow::Result<Self> {
-        // fill libname
-        // get ffi_name from name free_data
-        // iterate args, harvest name and types' .native() and .ffi() implems
-        // no ret type (Void?)
-        todo!()
+        Ok(Self{
+            lib_name: "dylib".to_owned(),
+
+            name: ffi_name.to_mixed_case(),
+            // TODO: vvvvvvvvv should this behavior live somewhere else?
+            field_types: vec![format!("Pointer<{}>", d.ident)],
+            ret_type: "void".to_owned(),
+
+            ffi_name,
+            // TODO: vvvvvvvvv should this behavior live somewhere else?
+            ffi_field_types: vec![format!("Pointer<{}>", d.ident)],
+            ffi_ret_type: "Void".to_owned(),
+        })
     }
 }

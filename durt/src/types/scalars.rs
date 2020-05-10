@@ -67,7 +67,7 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn ffi(&self, sty: &Type) -> crate::FFIType {
+    fn ffi(&self, sty: &Type) -> String {
         if let Type::Path(tp) = sty {
             let name = tp.path.get_ident().expect(".ffi() with non-scalar type").to_string();
             FFI_TYPES.get(name.as_str()).expect(".ffi() with non-scalar type").to_string()
@@ -76,12 +76,21 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn native(&self, sty: &Type) -> crate::NativeType {
+    fn native(&self, sty: &Type) -> String {
         if let Type::Path(tp) = sty {
             let name = tp.path.get_ident().expect(".native() with non-scalar type").to_string();
             NATIVE_TYPES.get(name.as_str()).expect(".native() with non-scalar type").to_string()
         } else {
             panic!("cannot call scalar .native() with non-scalar type");
+        }
+    }
+
+    fn annotation(&self, sty: &Type) -> Option<String> {
+        if let Type::Path(tp) = sty {
+            let name = tp.path.get_ident().expect(".native() with non-scalar type").to_string();
+            FFI_TYPES.get(name.as_str()).map(|s| format!("@{}", s))
+        } else {
+            None
         }
     }
 

@@ -21,6 +21,8 @@ impl super::Behavior for Behavior {
         "Result".to_owned()
     }
 
+    fn annotation(&self, _sty: &Type) -> Option<String> { todo!() }
+
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
 

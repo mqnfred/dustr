@@ -13,8 +13,9 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn ffi(&self, _sty: &Type) -> crate::FFIType { todo!() }
-    fn native(&self, _sty: &Type) -> crate::NativeType { todo!() }
+    fn ffi(&self, _sty: &Type) -> String { todo!() }
+    fn native(&self, _sty: &Type) -> String { todo!() }
+    fn annotation(&self, _sty: &Type) -> Option<String> { todo!() }
 
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
