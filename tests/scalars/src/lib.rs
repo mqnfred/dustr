@@ -12,3 +12,11 @@ pub struct GPS {
     lat: f64,
     lon: f64,
 }
+
+/*
+#[ffishim_use_case]
+fn add_to_latitude(mut gps: GPS, lat_diff: f64) -> GPS {
+    gps.lat += lat_diff;
+    gps
+}
+*/

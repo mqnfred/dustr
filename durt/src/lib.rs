@@ -43,7 +43,11 @@ pub struct Struct {
     field_getters: Vec<(String, String, String)>,       // native type, name, expr
 
     new_func: Function,
+    new_args: Vec<(String, String)>, // native type, field name
+    new_call_expr: String,
+
     free_func: Function,
+    free_method: String,
 }
 mod r#struct;
 

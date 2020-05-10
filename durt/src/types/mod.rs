@@ -52,4 +52,4 @@ mod result; pub use result::Behavior as BehaviorResult;
 mod vec;
 
 // Foreign/custom types implementing an ffi shim
-mod foreign;
+mod foreign; pub use foreign::Behavior as BehaviorForeign;

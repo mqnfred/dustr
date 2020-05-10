@@ -10,19 +10,29 @@ impl ::std::fmt::Display for crate::Struct {
                 \t{field_decls}\n\
                 \n\
                 \t{field_getters}\n\
+                \n\
+                \tfactory {name}.build({new_args}) => {new_call_expr};\n\
+                \t{free_method}\n\
             }}\n\
             {new_func}\n\
             {free_func}\n\
             ",
             name = self.name,
+
             field_decls = self.field_decls.iter().map(|(a, t, n)| {
                 a.as_ref().map(|a| {
                     format!("{} {} {};", a, t, n)
                 }).unwrap_or_else(|| format!("{} {};", t, n))
             }).join("\n"),
+
             field_getters = self.field_getters.iter().map(|(nat, name, expr)| {
                 format!("{} get {} => {};", nat, name, expr)
             }).join("\n"),
+
+            new_args = self.new_args.iter().map(|(t, n)| format!("{} {}", t, n)).join(", "),
+            new_call_expr = self.new_call_expr,
+            free_method = self.free_method,
+
             free_func = self.free_func,
             new_func = self.new_func,
         )
@@ -41,13 +51,40 @@ impl ::std::convert::TryFrom<&::ffishim::Data> for crate::Struct {
         )).collect();
         let field_getters = fields.iter().enumerate().map(|(idx, f)| {
             let behavior = crate::types::switch(&f.ty);
-            let name = name_of_field(idx as u32, &f.ident);
-            (behavior.native(&f.ty), name.clone(), behavior.ffi_to_native(&f.ty, name))
+            let getter_name = name_of_field(idx as u32, &f.ident);
+            let field_name = format!("_{}", getter_name);
+            (behavior.native(&f.ty), getter_name, behavior.ffi_to_native(&f.ty, field_name))
         }).collect();
-        let new_func = generate_new(d)?;
-        let free_func = crate::Function::free_from_data(&d)?;
 
-        Ok(Self{name: d.ident.to_string(), field_decls, field_getters, new_func, free_func})
+        let new_func = generate_new(d)?;
+        let new_args = fields.iter().enumerate().map(|(idx, f)| (
+            crate::types::switch(&f.ty).native(&f.ty),
+            name_of_field(idx as u32, &f.ident),
+        )).collect();
+        let new_call_expr = format!(
+            "{}({}).ref",
+            new_func.name,
+            fields.iter().enumerate().map(|(idx, f)| {
+                let name = name_of_field(idx as u32, &f.ident);
+                crate::types::switch(&f.ty).native_to_ffi(&f.ty, name)
+            }).join(", "),
+        );
+
+        let free_func = crate::Function::free_from_data(&d)?;
+        let free_method = format!("void free() {{ {}(addressOf); }}", free_func.name);
+
+        Ok(Self{
+            name: d.ident.to_string(),
+            field_decls,
+            field_getters,
+
+            new_func,
+            new_args,
+            new_call_expr,
+
+            free_func,
+            free_method,
+        })
     }
 }
 
