@@ -9,12 +9,10 @@ void main() {
 	print("${gps1.lon}");
 	gps1.free();
 
-	/*
 	var gps2 = GPS.build(5.0, 7.0);
 	print("${gps2.lat}");
 	gps2 = addToLatitude(gps2, 1.0);
 	print("${gps2.lat}");
 	print("${gps2.lon}");
 	gps2.free();
-	*/
 }

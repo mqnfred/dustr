@@ -56,6 +56,16 @@ pub fn subtype(ty: Type) -> Type {
     }
 }
 
+pub fn type_name_from_path(ty: &Type) -> String {
+    let path = if let Type::Path(tp) = &ty {
+        &tp.path
+    } else {
+        panic!("only normal type of kind typepath supported")
+    };
+
+    path.segments.last().expect(">0 elements").ident.to_string()
+}
+
 pub fn name_of_field(idx: u32, ident: &Option<::syn::Ident>) -> String {
     if let Some(ident) = ident {
         ident.to_string()
