@@ -39,7 +39,7 @@ static NATIVE_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
 });
 
 #[allow(dead_code)]
-static FFI_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
+static SHIM_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
     m.insert("f32", "Float");
     m.insert("f64", "Double");
@@ -67,13 +67,17 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn ffi(&self, sty: &Type) -> String {
+    fn shim(&self, sty: &Type) -> String {
         if let Type::Path(tp) = sty {
             let name = tp.path.get_ident().expect(".ffi() with non-scalar type").to_string();
-            FFI_TYPES.get(name.as_str()).expect(".ffi() with non-scalar type").to_string()
+            SHIM_TYPES.get(name.as_str()).expect(".ffi() with non-scalar type").to_string()
         } else {
             panic!("cannot call scalar .ffi() with non-scalar type");
         }
+    }
+
+    fn ffi(&self, sty: &Type) -> String {
+        self.native(sty)
     }
 
     fn native(&self, sty: &Type) -> String {
@@ -88,7 +92,7 @@ impl super::Behavior for Behavior {
     fn annotation(&self, sty: &Type) -> Option<String> {
         if let Type::Path(tp) = sty {
             let name = tp.path.get_ident().expect(".native() with non-scalar type").to_string();
-            FFI_TYPES.get(name.as_str()).map(|s| format!("@{}", s))
+            SHIM_TYPES.get(name.as_str()).map(|s| format!("@{}", s))
         } else {
             None
         }

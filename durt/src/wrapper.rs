@@ -66,7 +66,7 @@ impl ::std::convert::TryFrom<&::syn::ItemFn> for crate::Wrapper {
                 let ty = ret_ty(ifn);
                 if crate::types::Result.is(&ty) {
                     let subtype = subtype(ty.clone());
-                    Some(crate::types::switch(&subtype).ffi(&subtype))
+                    Some(crate::types::switch(&subtype).shim(&subtype))
                 } else {
                     None
                 }

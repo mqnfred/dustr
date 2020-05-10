@@ -51,20 +51,20 @@ impl ::std::convert::TryFrom<::ffishim::Data> for crate::Struct {
 
 fn generate_new(d: &::ffishim::Data) -> ::anyhow::Result<crate::Function> {
     let fields = unwrap_fields(d);
-    let ffi_name = format!("new_{}", d.ident.to_string().to_snake_case());
+    let shim_name = format!("new_{}", d.ident.to_string().to_snake_case());
 
     Ok(crate::Function{
         lib_name: "dylib".to_owned(),
 
-        name: ffi_name.to_mixed_case(),
+        name: shim_name.to_mixed_case(),
         field_types: fields.iter().map(|f| {
             crate::types::switch(&f.ty).native(&f.ty)
         }).collect(),
         ret_type: format!("Pointer<{}>", d.ident),
 
-        ffi_name,
-        ffi_field_types: fields.iter().map(|f| crate::types::switch(&f.ty).ffi(&f.ty)).collect(),
-        ffi_ret_type: format!("Pointer<{}>", d.ident),
+        shim_name,
+        shim_field_types: fields.iter().map(|f| crate::types::switch(&f.ty).ffi(&f.ty)).collect(),
+        shim_ret_type: format!("Pointer<{}>", d.ident),
     })
 }
 

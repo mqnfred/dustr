@@ -54,9 +54,9 @@ pub struct Function {
     field_types: Vec<String>,
     ret_type: String,
 
-    ffi_name: String,
-    ffi_field_types: Vec<String>,
-    ffi_ret_type: String,
+    shim_name: String,
+    shim_field_types: Vec<String>,
+    shim_ret_type: String,
 }
 mod function;
 

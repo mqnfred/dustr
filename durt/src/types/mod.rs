@@ -4,8 +4,10 @@ use ::once_cell::sync::Lazy;
 pub trait Behavior: Sync + Send {
     fn is(&self, sty: &::syn::Type) -> bool;
 
+    fn shim(&self, sty: &::syn::Type) -> ::std::string::String { self.ffi(sty) }
     fn ffi(&self, sty: &::syn::Type) -> ::std::string::String;
     fn native(&self, sty: &::syn::Type) -> ::std::string::String;
+
     fn annotation(&self, sty: &::syn::Type) -> ::std::option::Option<::std::string::String>;
 
     fn native_to_ffi(&self, sty: &::syn::Type, expr: ::std::string::String) -> ::std::string::String;
@@ -14,13 +16,6 @@ pub trait Behavior: Sync + Send {
     // TODO: the String/Option collision is getting old in this file...
     fn imports(&self, sty: &::syn::Type, pkg: &str) -> Vec<::std::string::String>;
 }
-
-///               FFI      /     Hybrid     /      Native
-///
-/// scalars:     Uint8     /       int      /       int
-/// foreign:   Pointer<X>  /    Pointer<X>  /        X
-/// option:    Pointer<X>  /    Pointer<X>  /        X
-/// string:  Pointer<Utf8> /  Pointer<Utf8> /      String
 
 /// Switch over a given `Type` and return the associated `Behavior`.
 ///
