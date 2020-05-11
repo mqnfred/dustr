@@ -4,9 +4,10 @@ use ::std::convert::TryInto;
 impl crate::Library {
     pub fn build(&self, dest: &::std::path::PathBuf) -> ::anyhow::Result<()> {
         ::std::fs::write(dest.join(format!("{}.dart", self.name)), format!(
-            "{imports}\n\n{structs}\n\n{functions}\n\n{wrappers}\n\n",
+            "{imports}\n\n{structs}\n\n{enums}\n\n{functions}\n\n{wrappers}\n\n",
             imports = self.imports,
             structs = self.structs.iter().join("\n"),
+            enums = self.enums.iter().join("\n"),
             functions = self.functions.iter().join("\n"),
             wrappers = self.wrappers.iter().join("\n"),
         ))?;
@@ -29,7 +30,8 @@ impl ::std::convert::TryFrom<(String, crate::Module)> for crate::Library {
         Ok(Self{
             name: m.name.clone(),
             imports: crate::Imports::from_module(&pkg, &m),
-            structs: m.structs.iter().map(|d| d.try_into()).collect::<Result<Vec<_>, _>>()?,
+            structs: m.structs.iter().map(|d| crate::Struct::from_data(d)).collect::<Result<Vec<_>, _>>()?,
+            enums: m.enums.iter().map(|d| d.try_into()).collect::<Result<Vec<_>, _>>()?,
             functions: m.functions.iter().map(|f| f.try_into()).collect::<Result<Vec<_>, _>>()?,
             wrappers: m.functions.iter().map(|f| f.try_into()).collect::<Result<Vec<_>, _>>()?,
             subs: m.subs.into_iter().map(|m| {

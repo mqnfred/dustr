@@ -25,6 +25,7 @@ pub struct Library {
     name: String,
     imports: Imports,
     structs: Vec<Struct>,
+    enums: Vec<Enum>,
     functions: Vec<Function>,
     wrappers: Vec<Wrapper>,
     subs: Vec<Library>,
@@ -50,6 +51,12 @@ pub struct Struct {
     free_method: String,
 }
 mod r#struct;
+
+#[derive(Debug)]
+pub struct Enum {
+    structs: Vec<Struct>,
+}
+mod r#enum;
 
 #[derive(Debug)]
 pub struct Function {

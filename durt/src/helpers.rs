@@ -99,3 +99,11 @@ pub fn alpha_idx(idx: u32) -> &'static str {
         _ => panic!("does not support more than 20 tuple struct fields"),
     }
 }
+
+pub fn concat_idents(left: &::syn::Ident, right: &::syn::Ident) -> ::syn::Ident {
+    new_ident(&format!("{}{}", left, right))
+}
+
+pub fn new_ident(src: &str) -> ::syn::Ident {
+    ::syn::Ident::new(src, ::proc_macro2::Span::call_site())
+}

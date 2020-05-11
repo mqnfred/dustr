@@ -39,11 +39,22 @@ impl ::std::fmt::Display for crate::Struct {
     }
 }
 
-impl ::std::convert::TryFrom<&::ffishim::Data> for crate::Struct {
-    type Error = ::anyhow::Error;
-    fn try_from(d: &::ffishim::Data) -> ::anyhow::Result<Self> {
-        let fields = unwrap_fields(d);
+impl crate::Struct {
+    pub fn from_data(data: &::ffishim::Data) -> ::anyhow::Result<Self> {
+        Self::from_fields(&data.ident, unwrap_fields(data))
+    }
 
+    pub fn from_variant(
+        enum_name: &::syn::Ident,
+        variant: &::ffishim::Variant,
+    ) -> ::anyhow::Result<Self> {
+        Self::from_fields(&concat_idents(enum_name, &variant.ident), &variant.fields)
+    }
+
+    pub fn from_fields(
+        name: &::syn::Ident,
+        fields: &::darling::ast::Fields<::ffishim::Field>,
+    ) -> ::anyhow::Result<Self> {
         let field_decls = fields.iter().enumerate().map(|(idx, f)| (
                 annotation(&f.ty),
                 crate::types::switch(&f.ty).ffi(&f.ty),
@@ -56,7 +67,7 @@ impl ::std::convert::TryFrom<&::ffishim::Data> for crate::Struct {
             (behavior.native(&f.ty), getter_name, behavior.ffi_to_native(&f.ty, field_name))
         }).collect();
 
-        let new_func = generate_new(d)?;
+        let new_func = generate_new(&name, fields)?;
         let new_args = fields.iter().enumerate().map(|(idx, f)| (
             crate::types::switch(&f.ty).native(&f.ty),
             name_of_field(idx as u32, &f.ident),
@@ -70,11 +81,11 @@ impl ::std::convert::TryFrom<&::ffishim::Data> for crate::Struct {
             }).join(", "),
         );
 
-        let free_func = crate::Function::free_from_data(&d)?;
+        let free_func = crate::Function::free_function(&name)?;
         let free_method = format!("void free() {{ {}(addressOf); }}", free_func.name);
 
         Ok(Self{
-            name: d.ident.to_string(),
+            name: name.to_string(),
             field_decls,
             field_getters,
 
@@ -96,9 +107,11 @@ fn annotation(sty: &::syn::Type) -> Option<String> {
     }
 }
 
-fn generate_new(d: &::ffishim::Data) -> ::anyhow::Result<crate::Function> {
-    let fields = unwrap_fields(d);
-    let shim_name = format!("new_{}", d.ident.to_string().to_snake_case());
+fn generate_new(
+    name: &::syn::Ident,
+    fields: &::darling::ast::Fields<::ffishim::Field>,
+) -> ::anyhow::Result<crate::Function> {
+    let shim_name = format!("new_{}", name.to_string().to_snake_case());
 
     Ok(crate::Function{
         lib_name: "dylib".to_owned(),
@@ -107,11 +120,11 @@ fn generate_new(d: &::ffishim::Data) -> ::anyhow::Result<crate::Function> {
         field_types: fields.iter().map(|f| {
             crate::types::switch(&f.ty).native(&f.ty)
         }).collect(),
-        ret_type: format!("Pointer<{}>", d.ident),
+        ret_type: format!("Pointer<{}>", name),
 
         shim_name,
         shim_field_types: fields.iter().map(|f| crate::types::switch(&f.ty).shim(&f.ty)).collect(),
-        shim_ret_type: format!("Pointer<{}>", d.ident),
+        shim_ret_type: format!("Pointer<{}>", name),
     })
 }
 

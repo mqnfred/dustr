@@ -49,20 +49,20 @@ fn ffi_type(ty: &::syn::Type) -> String {
 }
 
 impl crate::Function {
-    pub fn free_from_data(d: &::ffishim::Data) -> ::anyhow::Result<Self> {
-        let shim_name = format!("free_{}", d.ident.to_string().to_snake_case());
+    pub fn free_function(ident: &::syn::Ident) -> ::anyhow::Result<Self> {
+        let shim_name = format!("free_{}", ident.to_string().to_snake_case());
 
         Ok(Self{
             lib_name: "dylib".to_owned(),
 
             name: shim_name.to_mixed_case(),
             // TODO: vvvvvvvvv should this behavior live somewhere else?
-            field_types: vec![format!("Pointer<{}>", d.ident)],
+            field_types: vec![format!("Pointer<{}>", ident)],
             ret_type: "void".to_owned(),
 
             shim_name,
             // TODO: vvvvvvvvv should this behavior live somewhere else?
-            shim_field_types: vec![format!("Pointer<{}>", d.ident)],
+            shim_field_types: vec![format!("Pointer<{}>", ident)],
             shim_ret_type: "Void".to_owned(),
         })
     }
