@@ -17,14 +17,14 @@ ffishim = { path = "../../../ffishim/ffishim" }
 ffishim_derive = { path = "../../../ffishim/ffishim_derive" }
 
 [lib]
-name = "bindings"
+name = "${name}"
 crate-type = ["cdylib"]
 EOF
 
 cat > ${dir}/pubspec.yaml <<EOF
-name: ${name}
+name: ${name}_test
 dependencies:
-  bindings:
+  ${name}:
     path: ../../target/bindings/${name}
 environment:
   sdk: '>=2.0.0 <3.0.0'
@@ -32,7 +32,7 @@ EOF
 
 mkdir ${dir}/bin
 cat > ${dir}/bin/main.dart <<EOF
-import 'package:bindings/${name}.dart';
+import 'package:${name}/${name}.dart';
 
 void main() {
 	print("Hello, world!");

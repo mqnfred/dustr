@@ -1,6 +1,6 @@
-name: enums
+name: enums_test
 dependencies:
-  bindings:
+  enums:
     path: ../../target/bindings/enums
 environment:
   sdk: '>=2.0.0 <3.0.0'

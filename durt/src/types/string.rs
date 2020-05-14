@@ -17,11 +17,26 @@ impl super::Behavior for Behavior {
         }
     }
 
-    fn ffi(&self, _sty: &Type) -> String { todo!() }
-    fn native(&self, _sty: &Type) -> String { todo!() }
+    fn ffi(&self, _sty: &Type) -> String {
+        "Pointer<Utf8>".to_owned()
+    }
+    fn native(&self, _sty: &Type) -> String {
+        "String".to_owned()
+    }
 
-    fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
-    fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
+    fn native_to_ffi(&self, _sty: &Type, expr: String) -> String {
+        format!("stringToCString({})", expr)
+    }
+    fn ffi_to_native(&self, _sty: &Type, expr: String) -> String {
+        format!("Utf8.fromUtf8({})", expr)
+    }
 
-    fn imports(&self, _sty: &Type, _pkg: &str) -> Vec<String> { todo!() }
+    fn imports(&self, _sty: &Type, pkg: &str) -> Vec<String> {
+        vec![
+            "dart:ffi".to_owned(),
+            "dart:convert".to_owned(),
+            "package:ffi/ffi.dart".to_owned(),
+            format!("package:{}/durt/string.dart", pkg),
+        ]
+    }
 }

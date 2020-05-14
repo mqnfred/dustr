@@ -1,5 +1,5 @@
 [package]
-name = "enums"
+name = "strings"
 version = "0.1.0"
 authors = ["Louis Feuvrier <mqnfred@gmail.com>"]
 edition = "2018"
@@ -11,5 +11,5 @@ ffishim = { path = "../../../ffishim/ffishim" }
 ffishim_derive = { path = "../../../ffishim/ffishim_derive" }
 
 [lib]
-name = "enums"
+name = "strings"
 crate-type = ["cdylib"]

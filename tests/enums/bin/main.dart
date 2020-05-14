@@ -1,4 +1,4 @@
-import 'package:bindings/enums.dart';
+import 'package:enums/enums.dart';
 
 void main() {
 	var gps1 = GPS.build(2.0, 3.0);

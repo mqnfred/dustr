@@ -26,7 +26,7 @@ target/bindings/%: tests/%/src/lib.rs tests/%/Cargo.toml $(DURT_SRC)
 	cargo run \
 		--package durt -- \
 		--dest $@ \
-		--name bindings \
+		--name $(patsubst target/bindings/%,%,$@) \
 		$(patsubst target/bindings/%,tests/%,$@)
 
 # TODO: something's off here: if updating ffishim library, those tests won't be

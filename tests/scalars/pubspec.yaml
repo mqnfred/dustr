@@ -1,6 +1,6 @@
-name: scalars
+name: scalars_test
 dependencies:
-  bindings:
+  scalars:
     path: ../../target/bindings/scalars
 environment:
   sdk: '>=2.0.0 <3.0.0'

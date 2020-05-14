@@ -1,0 +1,6 @@
+name: strings_test
+dependencies:
+  strings:
+    path: ../../target/bindings/strings
+environment:
+  sdk: '>=2.0.0 <3.0.0'
