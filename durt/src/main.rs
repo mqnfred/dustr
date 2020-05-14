@@ -19,6 +19,6 @@ struct Options {
     name: String,
     #[clap(short = "d", long = "dest", about = "Folder to initialize the dart library in")]
     destination: ::std::path::PathBuf,
-    #[clap(name = "crates", about = "Crates to generate dart code for")]
+    #[clap(name = "crates", about = "Crates to generate dart bindings for")]
     crates: Vec<::std::path::PathBuf>,
 }

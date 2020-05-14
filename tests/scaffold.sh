@@ -13,7 +13,7 @@ sed -i "s#^]\$#\t\"${dir}\",\n]#g" Cargo.toml
 cargo new --lib ${dir}
 
 cat >> ${dir}/Cargo.toml <<EOF
-ffishim = { path = "../../../../ffishim/ffishim" }
+ffishim = { path = "../../../ffishim/ffishim" }
 ffishim_derive = { path = "../../../ffishim/ffishim_derive" }
 
 [lib]
@@ -25,13 +25,13 @@ cat > ${dir}/pubspec.yaml <<EOF
 name: ${name}
 dependencies:
   bindings:
-    path: ../../target/bindings/scalars
+    path: ../../target/bindings/${name}
 environment:
   sdk: '>=2.0.0 <3.0.0'
 EOF
 
-mkdir ${dir}/lib
-cat > ${dir}/lib/main.dart <<EOF
+mkdir ${dir}/bin
+cat > ${dir}/bin/main.dart <<EOF
 import 'package:bindings/${name}.dart';
 
 void main() {

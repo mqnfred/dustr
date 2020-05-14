@@ -3,4 +3,5 @@ members = [
 	"durt",
 
 	"tests/scalars",
+	"tests/enums",
 ]

@@ -40,21 +40,45 @@ mod imports;
 pub struct Struct {
     name: String,
 
-    field_decls: Vec<(Option<String>, String, String)>, // type annotation, ffi type, field name
-    field_getters: Vec<(String, String, String)>,       // native type, name, expr
+    declarations: Vec<FieldDeclaration>,
+    getters: Vec<Getter>,
 
-    new_func: Function,
-    new_args: Vec<(String, String)>, // native type, field name
-    new_call_expr: String,
-
-    free_func: Function,
-    free_method: String,
+    new_func: Option<Function>,
+    new_method: Option<NewMethod>,
+    free_func: Option<Function>,
+    free_method: Option<FreeMethod>,
+}
+#[derive(Debug)]
+struct NewMethod {
+    struct_name: String,
+    args: Vec<(String, String)>, // native type, field name
+    call_expr: String,
+}
+#[derive(Debug)]
+struct FreeMethod {
+    func_name: String,
+    cast_to: Option<String>,
+}
+#[derive(Debug)]
+struct FieldDeclaration {
+    annotation: Option<String>,
+    ffi_type: String,
+    name: String,
+}
+#[derive(Debug)]
+struct Getter {
+    native_type: String,
+    name: String,
+    expr: String,
 }
 mod r#struct;
 
 #[derive(Debug)]
 pub struct Enum {
-    structs: Vec<Struct>,
+    name: String,
+    base_struct: Struct,
+    variant_structs: Vec<Struct>,
+    variant_tags: Vec<String>,
 }
 mod r#enum;
 

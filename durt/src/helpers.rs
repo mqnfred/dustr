@@ -107,3 +107,11 @@ pub fn concat_idents(left: &::syn::Ident, right: &::syn::Ident) -> ::syn::Ident 
 pub fn new_ident(src: &str) -> ::syn::Ident {
     ::syn::Ident::new(src, ::proc_macro2::Span::call_site())
 }
+
+pub fn tostring_if_some<T: ::std::fmt::Display>(val: &Option<T>) -> String {
+    if let Some(val) = val {
+        val.to_string()
+    } else {
+        "".to_owned()
+    }
+}

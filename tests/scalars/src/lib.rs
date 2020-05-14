@@ -18,3 +18,12 @@ fn add_to_latitude(mut gps: GPS, lat_diff: f64) -> GPS {
     gps.lat += lat_diff;
     gps
 }
+
+#[derive(FFIShim)]
+pub enum Location {
+    GPS(GPS),
+    Address {
+        zip: u64,
+    },
+    Unknown,
+}
