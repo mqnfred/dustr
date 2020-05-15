@@ -1,4 +1,4 @@
-# Dustr
+# DUSTR
 
 Generate dart code to interact with rust FFIShim bindings.
 
