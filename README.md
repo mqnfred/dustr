@@ -1,4 +1,4 @@
-# Durt
+# Dustr
 
 Generate dart code to interact with rust FFIShim bindings.
 
@@ -6,18 +6,13 @@ Generate dart code to interact with rust FFIShim bindings.
 
 ### Implementation
 
- - Module initialization from paths to crates
- - Package building
- - Implement type behaviors for basic types:
-   2. Strings
-   3. Option
-   5. Vec
  - Find equivalent dart type for usize/isize
+ - Implement type behaviors for bool, char, option, vec, 
+ - Implement type import behavior for foreign
 
 ### Testing
 
- - Make test framework call durt/initialize package
- - Add tests for all basic type behaviors
+ - Make test framework call dustr/initialize package
  - Add a "complete" test/example situation
 
 ### Documentation

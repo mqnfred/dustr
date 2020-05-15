@@ -14,7 +14,7 @@ impl crate::Package {
             lib.build(&dest.join("lib"))?;
         }
         ::std::fs::write(dest.join("lib/dylib.dart"), crate::Library::new_dylib(&self.name))?;
-        copy_durt_lib(&dest)?;
+        copy_dustr_lib(&dest)?;
 
         Ok(())
     }
@@ -45,11 +45,11 @@ fn initialize_dependencies(dest: &::std::path::PathBuf) -> ::anyhow::Result<()> 
     }
 }
 
-fn copy_durt_lib(dest: &::std::path::PathBuf) -> ::anyhow::Result<()> {
-    ::std::fs::create_dir_all(dest.join("lib/durt"))?;
-    ::std::fs::write(dest.join("lib/durt/durt.dart"), include_str!("../lib/durt.dart"))?;
-    ::std::fs::write(dest.join("lib/durt/result.dart"), include_str!("../lib/result.dart"))?;
-    ::std::fs::write(dest.join("lib/durt/string.dart"), include_str!("../lib/string.dart"))?;
+fn copy_dustr_lib(dest: &::std::path::PathBuf) -> ::anyhow::Result<()> {
+    ::std::fs::create_dir_all(dest.join("lib/dustr"))?;
+    ::std::fs::write(dest.join("lib/dustr/dustr.dart"), include_str!("../lib/dustr.dart"))?;
+    ::std::fs::write(dest.join("lib/dustr/result.dart"), include_str!("../lib/result.dart"))?;
+    ::std::fs::write(dest.join("lib/dustr/string.dart"), include_str!("../lib/string.dart"))?;
     Ok(())
 }
 

@@ -9,7 +9,7 @@ fn main() {
 }
 
 fn run(opts: Options) -> ::anyhow::Result<()> {
-    ::durt::Package::new(opts.name, opts.crates)?.build(opts.destination)
+    ::dustr::Package::new(opts.name, opts.crates)?.build(opts.destination)
 }
 
 #[derive(Clap, Debug)]

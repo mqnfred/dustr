@@ -1,5 +1,5 @@
 TESTS = $(patsubst %,%/success,$(shell find tests -mindepth 1 -maxdepth 1 -type d))
-DURT_SRC = $(shell find durt -type f)
+DURT_SRC = $(shell find dustr -type f)
 
 all: $(TESTS)
 	@echo "-----------------------------"
@@ -24,7 +24,7 @@ tests/%/pubspec.lock: tests/%/pubspec.yaml
 # re-ran as ffishim sources are not part of the dependency. how to fix?
 target/bindings/%: tests/%/src/lib.rs tests/%/Cargo.toml $(DURT_SRC)
 	cargo run \
-		--package durt -- \
+		--package dustr -- \
 		--dest $@ \
 		--name $(patsubst target/bindings/%,%,$@) \
 		$(patsubst target/bindings/%,tests/%,$@)

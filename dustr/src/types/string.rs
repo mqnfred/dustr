@@ -36,7 +36,7 @@ impl super::Behavior for Behavior {
             "dart:ffi".to_owned(),
             "dart:convert".to_owned(),
             "package:ffi/ffi.dart".to_owned(),
-            format!("package:{}/durt/string.dart", pkg),
+            format!("package:{}/dustr/string.dart", pkg),
         ]
     }
 }
