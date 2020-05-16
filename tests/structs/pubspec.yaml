@@ -1,0 +1,6 @@
+name: structs_test
+dependencies:
+  structs:
+    path: ../../target/bindings/structs
+environment:
+  sdk: '>=2.0.0 <3.0.0'

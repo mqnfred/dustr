@@ -43,6 +43,7 @@ cat > ${dir}/src/lib.rs <<EOF
 #[macro_use]
 extern crate ffishim_derive;
 #[ffishim_library]
+fn lol() {}
 EOF
 
 cat > ${dir}/expected_output <<EOF
