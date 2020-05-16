@@ -6,7 +6,6 @@ Generate dart code to interact with rust FFIShim bindings.
 
 ### Implementation
 
- - Skip generating code for modules that are empty
  - Find equivalent dart type for usize/isize
  - Implement type behaviors for bool, char, option, vec, ...
  - Fix leaking of returned strings when not inside struct/enum

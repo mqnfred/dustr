@@ -35,7 +35,10 @@ impl crate::Module {
 
         for item in items {
             if let ::syn::Item::Mod(im) = item {
-                subs.push(Self::from_itemmod(crate_name.clone(), path.clone(), im)?);
+                let module = Self::from_itemmod(crate_name.clone(), path.clone(), im)?;
+                if !module.is_empty() {
+                    subs.push(module);
+                }
             } else if let ::syn::Item::Struct(is) = item {
                 if let Some(data) = filter_item_struct(is)? {
                     structs.push(data);
@@ -77,6 +80,13 @@ impl crate::Module {
 
             Self::from_file(name, crate_name, file)
         }
+    }
+
+    fn is_empty(&self) -> bool {
+        self.structs.is_empty() &&
+            self.enums.is_empty() &&
+            self.functions.is_empty() &&
+            self.subs.is_empty()
     }
 }
 
