@@ -30,8 +30,10 @@ impl crate::Imports {
         pkg: &str,
         crate_name: &str,
     ) -> Self {
-        Self(fields.iter().map(|f| {
-            crate::types::switch(&f.ty).imports(&f.ty, pkg, crate_name)
+        Self(fields.iter().filter_map(|f| if f.opaque {
+            None
+        } else {
+            Some(crate::types::switch(&f.ty).imports(&f.ty, pkg, crate_name))
         }).flatten().collect())
     }
 

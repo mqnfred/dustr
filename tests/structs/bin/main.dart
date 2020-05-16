@@ -12,4 +12,9 @@ void main() {
 		)
 	).repr;
 	print("${loc1.GPS.zero.lat.zero.val}");
+
+	var shy1 = newShy(5);
+	print("${shy1.extraverted}");
+	var isValid = validShy(shy1);
+	print("$isValid");
 }

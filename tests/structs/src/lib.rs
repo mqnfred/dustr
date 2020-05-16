@@ -30,3 +30,22 @@ mod submod {
         pub struct Latitude(crate::MyFloat);
     }
 }
+
+#[derive(FFIShim)]
+pub struct Shy {
+    #[ffishim(opaque)]
+    introverted: ::std::collections::HashMap<&'static str, u64>,
+    extraverted: u64,
+}
+
+#[ffishim_use_case]
+fn new_shy(extraverted: u64) -> Shy {
+    let mut introverted = ::std::collections::HashMap::<&'static str, u64>::default();
+    introverted.insert("wow", 1);
+    Shy{introverted, extraverted}
+}
+
+#[ffishim_use_case]
+fn valid_shy(shy: Shy) -> bool {
+    shy.introverted.get("wow").is_some()
+}

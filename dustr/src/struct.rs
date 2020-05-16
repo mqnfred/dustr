@@ -62,8 +62,17 @@ impl crate::Struct {
         let declarations = crate::FieldDeclaration::from_fields(fields);
         let getters = crate::Getter::from_fields(fields);
 
-        let new_func = generate_new_func(&name, fields)?;
-        let new_method = crate::NewMethod::new(name.to_string(), new_func.name.clone(), fields);
+        let mut new_func = None;
+        let mut new_method = None;
+        if fields.iter().all(|f| !f.opaque) {
+            new_func = Some(generate_new_func(&name, fields)?);
+            new_method = Some(crate::NewMethod::new(
+                name.to_string(),
+                new_func.as_ref().expect("new_func was just initialized").name.clone(),
+                fields,
+            ));
+        }
+
         let free_func = crate::Function::free_function(&name)?;
         let free_method = crate::FreeMethod::from_func_name(free_func.name.clone(), None);
 
@@ -72,8 +81,8 @@ impl crate::Struct {
             declarations,
             getters,
 
-            new_func: Some(new_func),
-            new_method: Some(new_method),
+            new_func,
+            new_method,
             free_func: Some(free_func),
             free_method: Some(free_method),
         })
@@ -189,10 +198,17 @@ impl crate::FieldDeclaration {
     }
 
     fn from_fields(fields: &::darling::ast::Fields<::ffishim::Field>) -> Vec<Self> {
-        fields.iter().enumerate().map(|(idx, f)| Self{
-            annotation: annotation(&f.ty),
-            ffi_type: crate::types::switch(&f.ty).ffi(&f.ty),
-            name: format!("_{}", name_of_field(idx as u32, &f.ident)),
+        fields.iter().enumerate().map(|(idx, f)| {
+            let name = format!("_{}", name_of_field(idx as u32, &f.ident));
+            if f.opaque {
+                Self{annotation: None, ffi_type: "Pointer<Void>".to_owned(), name}
+            } else {
+                Self{
+                    annotation: annotation(&f.ty),
+                    ffi_type: crate::types::switch(&f.ty).ffi(&f.ty),
+                    name,
+                }
+            }
         }).collect()
     }
 }
@@ -209,14 +225,18 @@ impl ::std::fmt::Display for crate::Getter {
 }
 impl crate::Getter {
     fn from_fields(fields: &::darling::ast::Fields<::ffishim::Field>) -> Vec<Self> {
-        fields.iter().enumerate().map(|(idx, f)| {
-            let behavior = crate::types::switch(&f.ty);
-            let getter_name = name_of_field(idx as u32, &f.ident);
-            let field_name = format!("_{}", getter_name);
-            Self{
-                native_type: behavior.native(&f.ty),
-                name: getter_name,
-                expr: behavior.ffi_to_native(&f.ty, field_name),
+        fields.iter().enumerate().filter_map(|(idx, f)| {
+            if f.opaque {
+                None
+            } else {
+                let behavior = crate::types::switch(&f.ty);
+                let getter_name = name_of_field(idx as u32, &f.ident);
+                let field_name = format!("_{}", getter_name);
+                Some(Self{
+                    native_type: behavior.native(&f.ty),
+                    name: getter_name,
+                    expr: behavior.ffi_to_native(&f.ty, field_name),
+                })
             }
         }).collect()
     }
