@@ -25,7 +25,7 @@ impl crate::Package {
         Ok(Self{
             name: name.clone(),
             libraries: crate_paths.into_iter().map(|path| {
-                crate::Library::try_from((name.clone(), crate::Module::from_crate(path)?))
+                crate::Library::try_from((crate::Module::from_crate(path)?, name.clone()))
             }).collect::<Result<Vec<_>, _>>()?,
         })
     }

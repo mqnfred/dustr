@@ -1,3 +1,4 @@
+use ::itertools::Itertools;
 use ::syn::*;
 use crate::helpers::*;
 
@@ -26,7 +27,61 @@ impl super::Behavior for Behavior {
         format!("{}.ref", expr)
     }
 
-    fn imports(&self, _sty: &Type, _pkg: &str) -> Vec<String> {
-        vec![] // TODO: if path length >1, import matching file
+    fn imports(&self, sty: &Type, pkg: &str, root: &str) -> Vec<String> {
+        import_from_type(sty, pkg, root).map(|i| vec![i]).unwrap_or_else(|| vec![])
+    }
+}
+
+fn import_from_type(sty: &Type, pkg: &str, root: &str) -> Option<String> {
+    if let Type::Path(tp) = sty {
+        import_from_path(&tp.path, pkg, root)
+    } else {
+        panic!("only normal type of kind typepath supported")
+    }
+}
+
+fn import_from_path(path: &Path, pkg: &str, root: &str) -> Option<String> {
+    let mut segments = path.segments.iter().peekable();
+    let first = segments.next().expect(">0 segments always");
+    let first_str = first.ident.to_string();
+
+    if first_str == "super" {
+        panic!("type paths using the 'super' keyword are forbidden")
+    } else if first_str == "crate" {
+        if let Some(path) = segments_to_import_path(segments) {
+            Some(format!("package:{}/{}/{}.dart", pkg, root, path))
+        } else {
+            Some(format!("package:{}/{}.dart", pkg, root))
+        }
+    } else if segments.peek().is_some() {
+        Some(format!(
+            "package:{}/{}.dart",
+            pkg,
+            segments_to_import_path(::std::iter::once(first).chain(segments)).expect(""),
+        ))
+    } else {
+        // no imports needed, same file
+        None
+    }
+}
+
+fn segments_to_import_path<'a, I: Iterator<Item=&'a PathSegment>>(segments: I) -> Option<String> {
+    let mut elements: Vec<String> = segments.map(|seg| {
+        let ident = seg.ident.to_string();
+        if ident == "super" {
+            "..".to_string()
+        } else if ident == "crate" {
+            panic!("cannot use keyword 'crate' in the middle of a type path")
+        } else {
+            ident
+        }
+    }).collect();
+
+    if elements.len() > 2 {
+        Some(elements.chunks_exact(elements.len()-1).flatten().join("/"))
+    } else if elements.len() == 2 {
+        Some(elements.remove(0))
+    } else {
+        None
     }
 }

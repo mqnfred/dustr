@@ -12,7 +12,7 @@ pub trait Behavior: Sync + Send {
     fn native_to_ffi(&self, sty: &Type, expr: String) -> String;
     fn ffi_to_native(&self, sty: &Type, expr: String) -> String;
 
-    fn imports(&self, sty: &Type, pkg: &str) -> Vec<String>;
+    fn imports(&self, sty: &Type, pkg: &str, root: &str) -> Vec<String>;
 }
 
 /// Switch over a given `Type` and return the associated `Behavior`.

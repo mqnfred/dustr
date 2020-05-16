@@ -24,11 +24,11 @@ impl super::Behavior for Behavior {
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
 
-    fn imports(&self, sty: &Type, pkg: &str) -> Vec<String> {
+    fn imports(&self, sty: &Type, pkg: &str, root: &str) -> Vec<String> {
         let mut imports = vec!["dart:ffi".to_owned(), format!("package:{}/dustr/result.dart", pkg)];
 
         let subtype = subtype(sty.clone());
-        imports.extend(crate::types::switch(&subtype).imports(&subtype, pkg));
+        imports.extend(crate::types::switch(&subtype).imports(&subtype, pkg, root));
 
         imports
     }

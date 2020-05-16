@@ -6,12 +6,17 @@ impl crate::Module {
         let name = manifest.package.ok_or_else(|| {
             ::anyhow::Error::msg(format!("empty [package] section for {}", path.display()))
         })?.name.to_lowercase();
-        Self::from_file(name, path.join("src/lib.rs"))
+        Self::from_file(name.clone(), name, path.join("src/lib.rs"))
     }
 
-    pub fn from_file(name: String, path: ::std::path::PathBuf) -> ::anyhow::Result<Self> {
+    pub fn from_file(
+        name: String,
+        root: String,
+        path: ::std::path::PathBuf
+    ) -> ::anyhow::Result<Self> {
         Self::from_items(
             name,
+            root,
             path.clone(),
             ::syn::parse_file(&::std::fs::read_to_string(path)?)?.items,
         )
@@ -19,6 +24,7 @@ impl crate::Module {
 
     pub fn from_items(
         name: String,
+        root: String,
         path: ::std::path::PathBuf,
         items: Vec<::syn::Item>,
     ) -> ::anyhow::Result<Self> {
@@ -29,7 +35,7 @@ impl crate::Module {
 
         for item in items {
             if let ::syn::Item::Mod(im) = item {
-                subs.push(Self::from_itemmod(path.clone(), im)?);
+                subs.push(Self::from_itemmod(root.clone(), path.clone(), im)?);
             } else if let ::syn::Item::Struct(is) = item {
                 if let Some(data) = filter_item_struct(is)? {
                     structs.push(data);
@@ -45,17 +51,18 @@ impl crate::Module {
             }
         }
 
-        Ok(Self{name, structs, enums, functions, subs})
+        Ok(Self{name, root, structs, enums, functions, subs})
     }
 
     pub fn from_itemmod(
+        root: String,
         parent: ::std::path::PathBuf,
         im: ::syn::ItemMod,
     ) -> ::anyhow::Result<Self> {
         let name = im.ident.to_string();
 
         if let Some((_, items)) = im.content {
-            Self::from_items(name, parent, items)
+            Self::from_items(name, root, parent, items)
         } else {
             let parent = parent.parent().ok_or_else(|| {
                 ::anyhow::Error::msg(format!("cannot get parent of {}", parent.display()))
@@ -68,7 +75,7 @@ impl crate::Module {
                 file = parent.join(format!("{}/mod.rs", name));
             }
 
-            Self::from_file(name, file)
+            Self::from_file(name, root, file)
         }
     }
 }

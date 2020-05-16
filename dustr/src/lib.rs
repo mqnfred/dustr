@@ -6,9 +6,12 @@ mod helpers;
 #[derive(Debug)]
 pub struct Module {
     name: String,
+    root: String,
+
     structs: Vec<::ffishim::Data>,
     enums: Vec<::ffishim::Data>,
     functions: Vec<::syn::ItemFn>,
+
     subs: Vec<Module>,
 }
 mod module;

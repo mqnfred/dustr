@@ -24,18 +24,18 @@ impl crate::Library {
     }
 }
 
-impl ::std::convert::TryFrom<(String, crate::Module)> for crate::Library {
+impl ::std::convert::TryFrom<(crate::Module, String)> for crate::Library {
     type Error = ::anyhow::Error;
-    fn try_from((pkg, m): (String, crate::Module)) -> ::anyhow::Result<Self> {
+    fn try_from((m, pkg): (crate::Module, String)) -> ::anyhow::Result<Self> {
         Ok(Self{
             name: m.name.clone(),
-            imports: crate::Imports::from_module(&pkg, &m),
+            imports: crate::Imports::from_module(&m, &pkg),
             structs: m.structs.iter().map(|d| crate::Struct::from_data(d)).collect::<Result<Vec<_>, _>>()?,
             enums: m.enums.iter().map(|d| d.try_into()).collect::<Result<Vec<_>, _>>()?,
             functions: m.functions.iter().map(|f| f.try_into()).collect::<Result<Vec<_>, _>>()?,
             wrappers: m.functions.iter().map(|f| f.try_into()).collect::<Result<Vec<_>, _>>()?,
             subs: m.subs.into_iter().map(|m| {
-                Self::try_from((pkg.clone(), m))
+                Self::try_from((m, pkg.clone()))
             }).collect::<Result<Vec<_>, _>>()?,
         })
     }
