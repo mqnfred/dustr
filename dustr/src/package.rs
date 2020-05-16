@@ -48,6 +48,7 @@ fn initialize_dependencies(dest: &::std::path::PathBuf) -> ::anyhow::Result<()> 
 fn copy_dustr_lib(dest: &::std::path::PathBuf) -> ::anyhow::Result<()> {
     ::std::fs::create_dir_all(dest.join("lib/dustr"))?;
     ::std::fs::write(dest.join("lib/dustr/dustr.dart"), include_str!("../lib/dustr.dart"))?;
+    ::std::fs::write(dest.join("lib/dustr/option.dart"), include_str!("../lib/option.dart"))?;
     ::std::fs::write(dest.join("lib/dustr/result.dart"), include_str!("../lib/result.dart"))?;
     ::std::fs::write(dest.join("lib/dustr/string.dart"), include_str!("../lib/string.dart"))?;
     Ok(())

@@ -1,6 +1,7 @@
 use ::once_cell::sync::Lazy;
 use ::std::collections::HashMap;
 use ::syn::*;
+use crate::helpers::*;
 
 /// Builtin scalar behaviors: `f32`, `u32`, ...
 ///
@@ -68,6 +69,10 @@ impl super::Behavior for Behavior {
             false
         }
     }
+    fn imports(&self, _sty: &Type, _pkg: &str, _crate_name: &str) -> Vec<String> {
+        vec!["dart:ffi".to_owned()]
+    }
+    fn name(&self, sty: &Type) -> String { type_name_from_path(sty) }
 
     fn shim(&self, sty: &Type) -> String {
         if let Type::Path(tp) = sty {
@@ -99,7 +104,4 @@ impl super::Behavior for Behavior {
         expr
     }
 
-    fn imports(&self, _sty: &Type, _pkg: &str, _crate_name: &str) -> Vec<String> {
-        vec!["dart:ffi".to_owned()]
-    }
 }

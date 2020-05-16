@@ -12,12 +12,35 @@ impl super::Behavior for Behavior {
             false
         }
     }
+    fn imports(&self, _sty: &Type, pkg: &str, _crate_name: &str) -> Vec<String> {
+        vec![format!("package:{}/dustr/option.dart", pkg)]
+    }
+    fn name(&self, _sty: &Type) -> String {
+        panic!("option of option forbidden")
+    }
 
-    fn ffi(&self, _sty: &Type) -> String { todo!() }
-    fn native(&self, _sty: &Type) -> String { todo!() }
+    fn shim(&self, sty: &Type) -> String {
+        let subtype = subtype(sty.clone());
+        format!("Pointer<{}>", crate::types::switch(&subtype).shim(&subtype))
+    }
+    fn ffi(&self, sty: &Type) -> String {
+        let subtype = subtype(sty.clone());
+        format!("Pointer<{}>", crate::types::switch(&subtype).ffi(&subtype))
+    }
+    fn native(&self, sty: &Type) -> String {
+        let subtype = subtype(sty.clone());
+        crate::types::switch(&subtype).native(&subtype)
+    }
 
-    fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
-    fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
-
-    fn imports(&self, _sty: &Type, _pkg: &str, _crate_name: &str) -> Vec<String> { todo!() }
+    fn native_to_ffi(&self, sty: &Type, expr: String) -> String {
+        format!("optional_{}({})", type_name_from_path(sty), expr)
+    }
+    fn ffi_to_native(&self, sty: &Type, expr: String) -> String {
+        let subtype = subtype(sty.clone());
+        format!(
+            "({}.address == 0) ? null : {}",
+            expr.clone(),
+            crate::types::switch(&subtype).ffi_to_native(&subtype, format!("{}.value", expr)),
+        )
+    }
 }

@@ -12,12 +12,12 @@ impl super::Behavior for Behavior {
             false
         }
     }
+    fn imports(&self, _sty: &Type, _pkg: &str, _crate_name: &str) -> Vec<String> { todo!() }
+    fn name(&self, _sty: &Type) -> String { todo!() }
 
     fn ffi(&self, _sty: &Type) -> String { todo!() }
     fn native(&self, _sty: &Type) -> String { todo!() }
 
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
-
-    fn imports(&self, _sty: &Type, _pkg: &str, _crate_name: &str) -> Vec<String> { todo!() }
 }

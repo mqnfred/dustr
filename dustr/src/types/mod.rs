@@ -4,6 +4,8 @@ use ::syn::*;
 /// The behavior of a `Type` as needed to generate its dart code.
 pub trait Behavior: Sync + Send {
     fn is(&self, sty: &Type) -> bool;
+    fn imports(&self, sty: &Type, pkg: &str, crate_name: &str) -> Vec<String>;
+    fn name(&self, sty: &Type) -> String;
 
     fn shim(&self, sty: &Type) -> String { self.ffi(sty) }
     fn ffi(&self, sty: &Type) -> String;
@@ -11,8 +13,6 @@ pub trait Behavior: Sync + Send {
 
     fn native_to_ffi(&self, sty: &Type, expr: String) -> String;
     fn ffi_to_native(&self, sty: &Type, expr: String) -> String;
-
-    fn imports(&self, sty: &Type, pkg: &str, crate_name: &str) -> Vec<String>;
 }
 
 /// Switch over a given `Type` and return the associated `Behavior`.

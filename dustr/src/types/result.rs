@@ -12,6 +12,17 @@ impl super::Behavior for Behavior {
             false
         }
     }
+    fn imports(&self, sty: &Type, pkg: &str, crate_name: &str) -> Vec<String> {
+        let mut imports = vec!["dart:ffi".to_owned(), format!("package:{}/dustr/result.dart", pkg)];
+
+        let subtype = subtype(sty.clone());
+        imports.extend(crate::types::switch(&subtype).imports(&subtype, pkg, crate_name));
+
+        imports
+    }
+    fn name(&self, _sty: &Type) -> String {
+        panic!("option of results not supported");
+    }
 
     fn ffi(&self, _sty: &Type) -> String {
         "Pointer<Result>".to_owned()
@@ -23,13 +34,4 @@ impl super::Behavior for Behavior {
 
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
-
-    fn imports(&self, sty: &Type, pkg: &str, crate_name: &str) -> Vec<String> {
-        let mut imports = vec!["dart:ffi".to_owned(), format!("package:{}/dustr/result.dart", pkg)];
-
-        let subtype = subtype(sty.clone());
-        imports.extend(crate::types::switch(&subtype).imports(&subtype, pkg, crate_name));
-
-        imports
-    }
 }

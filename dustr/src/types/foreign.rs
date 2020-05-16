@@ -12,6 +12,10 @@ impl super::Behavior for Behavior {
     fn is(&self, _: &Type) -> bool {
         true
     }
+    fn imports(&self, sty: &Type, pkg: &str, crate_name: &str) -> Vec<String> {
+        import_from_type(sty, pkg, crate_name).map(|i| vec![i]).unwrap_or_else(|| vec![])
+    }
+    fn name(&self, _sty: &Type) -> String { "struct".to_owned() }
 
     fn ffi(&self, sty: &Type) -> String {
         format!("Pointer<{}>", type_name_from_path(sty))
@@ -25,10 +29,6 @@ impl super::Behavior for Behavior {
     }
     fn ffi_to_native(&self, _sty: &Type, expr: String) -> String {
         format!("{}.ref", expr)
-    }
-
-    fn imports(&self, sty: &Type, pkg: &str, crate_name: &str) -> Vec<String> {
-        import_from_type(sty, pkg, crate_name).map(|i| vec![i]).unwrap_or_else(|| vec![])
     }
 }
 

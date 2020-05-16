@@ -16,6 +16,15 @@ impl super::Behavior for Behavior {
             false
         }
     }
+    fn imports(&self, _sty: &Type, pkg: &str, _crate_name: &str) -> Vec<String> {
+        vec![
+            "dart:ffi".to_owned(),
+            "dart:convert".to_owned(),
+            "package:ffi/ffi.dart".to_owned(),
+            format!("package:{}/dustr/string.dart", pkg),
+        ]
+    }
+    fn name(&self, _sty: &Type) -> String { "string".to_owned() }
 
     fn ffi(&self, _sty: &Type) -> String {
         "Pointer<Utf8>".to_owned()
@@ -29,14 +38,5 @@ impl super::Behavior for Behavior {
     }
     fn ffi_to_native(&self, _sty: &Type, expr: String) -> String {
         format!("Utf8.fromUtf8({})", expr)
-    }
-
-    fn imports(&self, _sty: &Type, pkg: &str, _crate_name: &str) -> Vec<String> {
-        vec![
-            "dart:ffi".to_owned(),
-            "dart:convert".to_owned(),
-            "package:ffi/ffi.dart".to_owned(),
-            format!("package:{}/dustr/string.dart", pkg),
-        ]
     }
 }

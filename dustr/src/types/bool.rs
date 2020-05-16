@@ -12,6 +12,8 @@ impl super::Behavior for Behavior {
             false
         }
     }
+    fn imports(&self, _sty: &Type, _pkg: &str, _crate_name: &str) -> Vec<String> { vec![] }
+    fn name(&self, _sty: &Type) -> String { "bool".to_owned() }
 
     fn shim(&self, _sty: &Type) -> String {
         "Int8".to_owned()
@@ -28,9 +30,5 @@ impl super::Behavior for Behavior {
     }
     fn ffi_to_native(&self, _sty: &Type, expr: String) -> String {
         format!("({} == 0 ? false : true)", expr)
-    }
-
-    fn imports(&self, _sty: &Type, _pkg: &str, _crate_name: &str) -> Vec<String> {
-        vec![]
     }
 }
