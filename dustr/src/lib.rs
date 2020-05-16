@@ -6,7 +6,7 @@ mod helpers;
 #[derive(Debug)]
 pub struct Module {
     name: String,
-    root: String,
+    crate_name: String,
 
     structs: Vec<::ffishim::Data>,
     enums: Vec<::ffishim::Data>,

@@ -19,5 +19,5 @@ impl super::Behavior for Behavior {
     fn native_to_ffi(&self, _sty: &Type, _expr: String) -> String { todo!() }
     fn ffi_to_native(&self, _sty: &Type, _expr: String) -> String { todo!() }
 
-    fn imports(&self, _sty: &Type, _pkg: &str, _root: &str) -> Vec<String> { todo!() }
+    fn imports(&self, _sty: &Type, _pkg: &str, _crate_name: &str) -> Vec<String> { todo!() }
 }

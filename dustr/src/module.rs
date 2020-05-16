@@ -11,12 +11,12 @@ impl crate::Module {
 
     pub fn from_file(
         name: String,
-        root: String,
+        crate_name: String,
         path: ::std::path::PathBuf
     ) -> ::anyhow::Result<Self> {
         Self::from_items(
             name,
-            root,
+            crate_name,
             path.clone(),
             ::syn::parse_file(&::std::fs::read_to_string(path)?)?.items,
         )
@@ -24,7 +24,7 @@ impl crate::Module {
 
     pub fn from_items(
         name: String,
-        root: String,
+        crate_name: String,
         path: ::std::path::PathBuf,
         items: Vec<::syn::Item>,
     ) -> ::anyhow::Result<Self> {
@@ -35,7 +35,7 @@ impl crate::Module {
 
         for item in items {
             if let ::syn::Item::Mod(im) = item {
-                subs.push(Self::from_itemmod(root.clone(), path.clone(), im)?);
+                subs.push(Self::from_itemmod(crate_name.clone(), path.clone(), im)?);
             } else if let ::syn::Item::Struct(is) = item {
                 if let Some(data) = filter_item_struct(is)? {
                     structs.push(data);
@@ -51,18 +51,18 @@ impl crate::Module {
             }
         }
 
-        Ok(Self{name, root, structs, enums, functions, subs})
+        Ok(Self{name, crate_name, structs, enums, functions, subs})
     }
 
     pub fn from_itemmod(
-        root: String,
+        crate_name: String,
         parent: ::std::path::PathBuf,
         im: ::syn::ItemMod,
     ) -> ::anyhow::Result<Self> {
         let name = im.ident.to_string();
 
         if let Some((_, items)) = im.content {
-            Self::from_items(name, root, parent, items)
+            Self::from_items(name, crate_name, parent, items)
         } else {
             let parent = parent.parent().ok_or_else(|| {
                 ::anyhow::Error::msg(format!("cannot get parent of {}", parent.display()))
@@ -75,7 +75,7 @@ impl crate::Module {
                 file = parent.join(format!("{}/mod.rs", name));
             }
 
-            Self::from_file(name, root, file)
+            Self::from_file(name, crate_name, file)
         }
     }
 }

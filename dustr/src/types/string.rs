@@ -31,7 +31,7 @@ impl super::Behavior for Behavior {
         format!("Utf8.fromUtf8({})", expr)
     }
 
-    fn imports(&self, _sty: &Type, pkg: &str, _root: &str) -> Vec<String> {
+    fn imports(&self, _sty: &Type, pkg: &str, _crate_name: &str) -> Vec<String> {
         vec![
             "dart:ffi".to_owned(),
             "dart:convert".to_owned(),
