@@ -4,9 +4,9 @@ use ::syn::*;
 
 /// Builtin scalar behaviors: `f32`, `u32`, ...
 ///
-/// The behavior for different scalars is shared into this object. Here is the list of scalars and
-/// their libc equivalents:
+/// The behavior for different scalars is shared into this object. Handled here are:
 ///
+///  - `char`
 ///  - `f32`
 ///  - `f64`
 ///  - `u8`
@@ -23,6 +23,7 @@ pub struct Behavior;
 
 static NATIVE_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
+    m.insert("char", "int");
     m.insert("f32", "double");
     m.insert("f64", "double");
     m.insert("u8", "int");
@@ -41,6 +42,7 @@ static NATIVE_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
 #[allow(dead_code)]
 static SHIM_TYPES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
+    m.insert("char", "Uint32");
     m.insert("f32", "Float");
     m.insert("f64", "Double");
     m.insert("u8", "Uint8");

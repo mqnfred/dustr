@@ -6,8 +6,8 @@ Generate dart code to interact with rust FFIShim bindings.
 
 ### Implementation
 
- - Find equivalent dart type for usize/isize
- - Implement type behaviors for bool, char, option, vec, ...
+ - Find equivalent dart type for usize/isize/char
+ - Implement type behaviors for bool, option, vec, ...
  - Fix leaking of returned strings when not inside struct/enum
 
 ### Testing
