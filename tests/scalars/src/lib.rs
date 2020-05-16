@@ -6,3 +6,8 @@ extern crate ffishim_derive;
 fn add(a: u32, b: u32) -> u32 {
     a + b
 }
+
+#[ffishim_use_case]
+fn not(a: bool) -> bool {
+    !a
+}

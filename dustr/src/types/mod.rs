@@ -30,6 +30,7 @@ static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
     vec![
         // End-types
         Box::new(scalars::Behavior),
+        Box::new(self::bool::Behavior),
         Box::new(string::Behavior),
 
         // Parameterized types
@@ -44,6 +45,7 @@ static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
 
 // End-types
 mod scalars; pub use scalars::Behavior as BehaviorScalars;
+mod bool;
 mod string;
 
 // Parameterized types
