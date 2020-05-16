@@ -49,3 +49,19 @@ fn new_shy(extraverted: u64) -> Shy {
 fn valid_shy(shy: Shy) -> bool {
     shy.introverted.get("wow").is_some()
 }
+
+#[derive(FFIShim)]
+#[ffishim(opaque)]
+pub struct Invisible {
+    hidden: u64,
+}
+
+#[ffishim_use_case]
+fn new_invisible(hidden: u64) -> Invisible {
+    Invisible{hidden}
+}
+
+#[ffishim_use_case]
+fn check_invisible(inv: Invisible) -> bool {
+    inv.hidden == 13
+}

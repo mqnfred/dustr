@@ -17,11 +17,16 @@ impl crate::Imports {
     }
 
     fn from_data(data: &::ffishim::Data, pkg: &str, crate_name: &str) -> Self {
-        Self(vec![format!("package:{}/dylib.dart", pkg)]) + match &data.data {
-            ::darling::ast::Data::Struct(fields) => Self::from_fields(&fields, pkg, crate_name),
-            ::darling::ast::Data::Enum(variants) => variants.iter().map(|v| {
-                Self::from_fields(&v.fields, pkg, crate_name)
-            }).sum(),
+        let imports = Self(vec![format!("package:{}/dylib.dart", pkg)]);
+        if data.opaque {
+            imports
+        } else {
+             imports + match &data.data {
+                ::darling::ast::Data::Struct(fields) => Self::from_fields(&fields, pkg, crate_name),
+                ::darling::ast::Data::Enum(variants) => variants.iter().map(|v| {
+                    Self::from_fields(&v.fields, pkg, crate_name)
+                }).sum(),
+            }
         }
     }
 

@@ -15,6 +15,11 @@ void main() {
 
 	var shy1 = newShy(5);
 	print("${shy1.extraverted}");
-	var isValid = validShy(shy1);
-	print("$isValid");
+	var isShy1Valid = validShy(shy1);
+	print("$isShy1Valid");
+
+	var inv1 = newInvisible(13);
+	print("${inv1}");
+	var isInv1Valid = checkInvisible(inv1);
+	print("${isInv1Valid}");
 }

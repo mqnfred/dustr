@@ -33,7 +33,24 @@ impl ::std::fmt::Display for crate::Struct {
 
 impl crate::Struct {
     pub fn from_data(data: &::ffishim::Data) -> ::anyhow::Result<Self> {
-        Self::from_fields(&data.ident, unwrap_fields(data))
+        if data.opaque {
+            Ok(Self{
+                name: data.ident.to_string(),
+
+                declarations: vec![],
+                getters: vec![],
+
+                new_func: None,
+                new_method: None,
+                free_func: Some(crate::Function::free_function(&data.ident)?),
+                free_method: Some(crate::FreeMethod::from_func_name(
+                    format!("free{}", data.ident),
+                    Some(data.ident.to_string()),
+                )),
+            })
+        } else {
+            Self::from_fields(&data.ident, unwrap_fields(data))
+        }
     }
 
     pub fn from_variant(
