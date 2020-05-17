@@ -33,7 +33,8 @@ impl super::Behavior for Behavior {
     }
 
     fn native_to_ffi(&self, sty: &Type, expr: String) -> String {
-        format!("optional_{}({})", type_name_from_path(sty), expr)
+        let subtype = subtype(sty.clone());
+        format!("optional_{}({})", type_name_from_path(&subtype), expr)
     }
     fn ffi_to_native(&self, sty: &Type, expr: String) -> String {
         let subtype = subtype(sty.clone());

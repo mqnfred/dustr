@@ -12,7 +12,7 @@ Pointer<Pointer<T>> optional_struct<T extends Struct>(T s) {
 	}
 }
 
-Pointer<Pointer<Utf8>> optional_string(String s) {
+Pointer<Pointer<Utf8>> optional_String(String s) {
 	if (s == null) {
 		return Pointer<Pointer<Utf8>>.fromAddress(0);
 	} else {
@@ -32,6 +32,16 @@ Pointer<Uint32> optional_bool(bool b) {
 		} else {
 			opt.value = 0;
 		}
+		return opt;
+	}
+}
+
+Pointer<Uint32> optional_char(int i) {
+	if (i == null) {
+		return Pointer<Uint32>.fromAddress(0);
+	} else {
+		Pointer<Uint32> opt = allocate(count: 1);
+		opt.value = i;
 		return opt;
 	}
 }
