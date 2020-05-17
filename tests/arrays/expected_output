@@ -1,2 +1,17 @@
+Instance of 'Crowd'
 2
+---
+Instance of 'Person'
+I like hapricots
+1
+3
 5
+---
+Instance of 'Person'
+Yes, we can
+2
+4
+6
+---
+Exception: index out of bounds
+Exception: index out of bounds

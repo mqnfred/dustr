@@ -4,9 +4,11 @@ import 'package:ffi/ffi.dart';
 import 'string.dart';
 
 class Array extends Struct {
+	Pointer<Void> data;
 	@Uint64()
 	int length;
-	Pointer<Void> data;
+	@Uint64()
+	int capacity;
 }
 
 class StructList<T extends Struct> extends ListBase<T> {
