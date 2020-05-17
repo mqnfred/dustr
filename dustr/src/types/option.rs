@@ -25,7 +25,7 @@ impl super::Behavior for Behavior {
     }
     fn ffi(&self, sty: &Type) -> String {
         let subtype = subtype(sty.clone());
-        format!("Pointer<{}>", crate::types::switch(&subtype).ffi(&subtype))
+        format!("Pointer<{}>", crate::types::switch(&subtype).shim(&subtype))
     }
     fn native(&self, sty: &Type) -> String {
         let subtype = subtype(sty.clone());

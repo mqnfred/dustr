@@ -12,6 +12,7 @@ Generate dart code to interact with rust FFIShim bindings.
 ### Features
 
  - Find equivalent dart type for usize/isize/char
+ - Implement DateTime behavior
 
 ### Testing
 
