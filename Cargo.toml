@@ -6,4 +6,5 @@ members = [
 	"tests/enums",
 	"tests/strings",
 	"tests/structs",
+	"tests/arrays",
 ]

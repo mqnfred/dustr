@@ -4,15 +4,14 @@ Generate dart code to interact with rust FFIShim bindings.
 
 ## TODO
 
-### Implementation
-
- - Find equivalent dart type for usize/isize/char
- - Implement type behaviors for vec, ...
-
 ### Bugs
 
  - Fix leaking of returned strings when not inside struct/enum
  - Fix leaking of returned options when not inside struct/enum
+
+### Features
+
+ - Find equivalent dart type for usize/isize/char
 
 ### Testing
 

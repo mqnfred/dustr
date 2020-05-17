@@ -1,0 +1,6 @@
+name: arrays_test
+dependencies:
+  arrays:
+    path: ../../target/bindings/arrays
+environment:
+  sdk: '>=2.0.0 <3.0.0'

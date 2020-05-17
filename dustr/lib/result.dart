@@ -15,6 +15,7 @@ class Result extends Struct {
 
 	Pointer<T> unpack<T extends NativeType>() {
 		if (message.address != 0) {
+			// TODO: the message leaks here
 			throw Error(Utf8.fromUtf8(message));
 		}
 		return Pointer<T>.fromAddress(payload.address);
