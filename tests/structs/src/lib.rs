@@ -65,3 +65,8 @@ fn new_invisible(hidden: u64) -> Invisible {
 fn check_invisible(inv: Invisible) -> bool {
     inv.hidden == 13
 }
+
+#[ffishim_use_case]
+fn check_invisible_mut(inv: &mut Invisible) -> bool {
+    inv.hidden == 13
+}

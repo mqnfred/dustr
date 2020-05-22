@@ -20,6 +20,8 @@ void main() {
 
 	var inv1 = newInvisible(13);
 	print("${inv1}");
-	var isInv1Valid = checkInvisible(inv1);
-	print("${isInv1Valid}");
+	var isInv1Valid1 = checkInvisibleMut(inv1);
+	print("${isInv1Valid1}");
+	var isInv1Valid2 = checkInvisible(inv1);
+	print("${isInv1Valid2}");
 }
