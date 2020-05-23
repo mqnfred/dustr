@@ -1,0 +1,6 @@
+name: timing_test
+dependencies:
+  timing:
+    path: ../../target/bindings/timing
+environment:
+  sdk: '>=2.0.0 <3.0.0'

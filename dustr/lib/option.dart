@@ -46,6 +46,16 @@ Pointer<Uint32> optional_char(int i) {
 	}
 }
 
+Pointer<Int64> optional_duration(Duration b) {
+	if (b == null) {
+		return Pointer<Int64>.fromAddress(0);
+	} else {
+		Pointer<Int64> opt = allocate(count: 1);
+		opt.value = b.inMilliseconds;
+		return opt;
+	}
+}
+
 Pointer<Float> optional_f32(double d) {
 	if (d == null) {
 		return Pointer<Float>.fromAddress(0);

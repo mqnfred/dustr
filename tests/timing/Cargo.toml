@@ -1,0 +1,16 @@
+[package]
+name = "timing"
+version = "0.1.0"
+authors = ["Louis Feuvrier <mqnfred@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "^0"
+ffishim = { path = "../../../ffishim/ffishim" }
+ffishim_derive = { path = "../../../ffishim/ffishim_derive" }
+
+[lib]
+name = "timing"
+crate-type = ["cdylib"]

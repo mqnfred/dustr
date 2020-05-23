@@ -109,6 +109,10 @@ impl crate::Struct {
 fn annotation(sty: &::syn::Type) -> Option<String> {
     if crate::types::BehaviorScalars.is(sty) {
         Some(format!("@{}()", crate::types::BehaviorScalars.shim(sty)))
+    } else if crate::types::BehaviorDuration.is(sty) {
+        Some(format!("@{}()", crate::types::BehaviorDuration.shim(sty)))
+    } else if crate::types::BehaviorBool.is(sty) {
+        Some(format!("@{}()", crate::types::BehaviorBool.shim(sty)))
     } else {
         None
     }
