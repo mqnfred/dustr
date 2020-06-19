@@ -1,8 +1,8 @@
 # DUSTR
 
-Generate dart code to interact with rust FFIShim bindings.
+Generate dart code to interact with rust [FFIShim][1] bindings.
 
-## TODO
+## TODO/Limitations
 
 ### Bugs
 
@@ -25,3 +25,5 @@ Generate dart code to interact with rust FFIShim bindings.
 
  - Write README.md introduction on what this crate does
  - Where to write binary documentation in doc.rs?
+
+[1]: https://github.com/mqnfred/ffishim
