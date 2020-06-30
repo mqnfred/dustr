@@ -20,7 +20,7 @@ void main() {
 }
 ```
 
-`dustr` is as a binary that parses rust code to generate its dart bindings. The
+`dustr` is a binary that parses rust code to generate its dart bindings. The
 rust code must be marked using procedural macros from the [ffishim][1] library.
 
 These procedural macros generate an FFI-compatible API around the original data
@@ -41,7 +41,7 @@ We also create our hello crate which we will mark as C dynamic library (cdylib,
 to generate a `.so` shared object in the `rusthello/target/debug` directory.)
 
 ```sh
-cargo new --lib rusthello
+cargo new --lib rusthello --name hello
 cat >>rusthello/Cargo.toml <<EOF
 ffishim = "0.1.0"
 ffishim_derive = "0.1.0"
@@ -76,8 +76,7 @@ rusthello library. `pub get` pulls in any dependencies.
 
 ```sh
 mkdir -p dartapp/bin
-cd dartapp
-cat >bin/main.dart <<EOF
+cat >dartapp/bin/main.dart <<EOF
 import 'package:hello/hello.dart';
 
 void main() {
@@ -85,7 +84,7 @@ void main() {
     print("\${greeting}");
 }
 EOF
-cat >pubspec.yaml <<EOF
+cat >dartapp/pubspec.yaml <<EOF
 ---
 name: app
 dependencies:
@@ -94,13 +93,13 @@ dependencies:
 environment:
   sdk: ">=2.0.0 <3.0.0"
 EOF
-pub get
+cd dartapp; pub get; cd -
 ```
 
 Now we can run the dart app while providing it the built rust library:
 
 ```sh
-LD_LIBRARY_PATH=../rusthello/target/debug dart bin/main.dart
+LD_LIBRARY_PATH=rusthello/target/debug dart dartapp/bin/main.dart
 ```
 
 ## Examples
