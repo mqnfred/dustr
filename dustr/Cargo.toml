@@ -16,7 +16,7 @@ edition = "2018"
 anyhow = "^1"
 cargo_toml = "^0"
 # TODO: switch to crates.io version
-clap = { git = "https://github.com/clap-rs/clap/" }
+clap = { git = "https://github.com/clap-rs/clap/", version = "3.0.0-beta.1" }
 darling = "^0"
 ffishim = "^0.1.0"
 indoc = "^0"
