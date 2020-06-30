@@ -7,8 +7,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ffishim = { path = "../../../ffishim/ffishim" }
-ffishim_derive = { path = "../../../ffishim/ffishim_derive" }
+ffishim = "0.1.0"
+ffishim_derive = "0.1.0"
 
 [lib]
 name = "arrays"
