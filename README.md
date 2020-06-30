@@ -1,20 +1,107 @@
 # DUSTR
 
-`dustr` is a binary that generates dart bindings for a rust crate's library.
+With `dustr`, you can call this rust code:
 
-## How it works
+```rust
+#[ffishim_use_case]
+fn hello(s: String) -> String {
+    format!("Hello, {}!", s)
+}
+```
 
-In order for a rust data structure or function to be callable from those dart
-bindings, it needs to be tagged with the [ffishim][1] family of procedural
-macros.
+from dart:
 
-Those procedural macros generate a FFI-compatible (C ABI) API around the
-original data structure/function. This is necessary because many basic rust
-types (`String`, `Option`, `Vec`, ...) do not respect the C ABI.
+```dart
+import 'package:hello/hello.dart';
 
-`dustr` will parse the rust crate and look for those bindings to find data
-structures and methods that are "dart-compatible", and will generate dart
-bindings for those.
+void main() {
+    var greeting = hello("fred");
+    print("${greeting}");
+}
+```
+
+`dustr` is as a binary that parses rust code to generate its dart bindings. The
+rust code must be marked using procedural macros from the [ffishim][1] library.
+
+These procedural macros generate an FFI-compatible API around the original data
+structure/function. This is necessary because many basic rust types (`String`,
+`Option`, `Vec`, ...) do not respect the C ABI.
+
+## Install & usage
+
+Now, suppose we want to reproduce our first example. We need make, cargo and
+the dart sdk. We install dustr using cargo:
+
+```sh
+export PATH=$PATH:$HOME/.cargo/bin
+cargo install dustr
+```
+
+We also create our hello crate which we will mark as C dynamic library (cdylib,
+to generate a `.so` shared object in the `rusthello/target/debug` directory.)
+
+```sh
+cargo new --lib rusthello
+cat >>rusthello/Cargo.toml <<EOF
+ffishim = "0.1.0"
+ffishim_derive = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+EOF
+cat >rusthello/src/lib.rs <<EOF
+#[macro_use]
+extern crate ffishim_derive;
+
+#[ffishim_library]
+#[ffishim_use_case]
+fn hello(s: String) -> String {
+    format!("Hello, {}!", s)
+}
+EOF
+cargo build --manifest-path=rusthello/Cargo.toml
+ls rusthello/target/debug/libhello.so
+```
+
+We took the opportunity to add the code (with a healthy dose more plumbing this
+time) and build the library. Now let's step into the dart side...
+
+```sh
+dustr --dest darthello --name hello rusthello/
+cd darthello; pub get; cd -
+```
+
+The `dustr` command will create the dart package containing the bindings to the
+rusthello library. `pub get` pulls in any dependencies.
+
+```sh
+mkdir -p dartapp/bin
+cd dartapp
+cat >bin/main.dart <<EOF
+import 'package:hello/hello.dart';
+
+void main() {
+    var greeting = hello("fred");
+    print("\${greeting}");
+}
+EOF
+cat >pubspec.yaml <<EOF
+---
+name: app
+dependencies:
+  hello:
+    path: ../darthello
+environment:
+  sdk: ">=2.0.0 <3.0.0"
+EOF
+pub get
+```
+
+Now we can run the dart app while providing it the built rust library:
+
+```sh
+LD_LIBRARY_PATH=../rusthello/target/debug dart bin/main.dart
+```
 
 ## Examples
 
