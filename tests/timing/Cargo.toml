@@ -8,8 +8,8 @@ edition = "2018"
 
 [dependencies]
 chrono = "^0"
-ffishim = "0.1.0"
-ffishim_derive = "0.1.0"
+ffishim = "0.1.1"
+ffishim_derive = "0.1.1"
 
 [lib]
 name = "timing"

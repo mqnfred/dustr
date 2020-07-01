@@ -1,3 +1,7 @@
+//! Definition of types supported by dustr and their behavior.
+//!
+//! These types are the basic types you can use to build your data hierarchy.
+
 use ::once_cell::sync::Lazy;
 use ::syn::*;
 
@@ -29,19 +33,19 @@ pub fn switch<'a, 'b>(sty: &'a Type) -> &'b Box<dyn Behavior> {
 static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
     vec![
         // End-types
-        Box::new(scalars::Behavior),
-        Box::new(self::bool::Behavior),
-        Box::new(duration::Behavior),
-        Box::new(string::Behavior),
+        Box::new(BehaviorScalars),
+        Box::new(BehaviorBool),
+        Box::new(BehaviorDuration),
+        Box::new(BehaviorString),
 
         // Parameterized types
-        Box::new(option::Behavior),
-        Box::new(result::Behavior),
-        Box::new(vec::Behavior),
-        Box::new(reference::Behavior),
+        Box::new(BehaviorOption),
+        Box::new(BehaviorResult),
+        Box::new(BehaviorVec),
+        Box::new(BehaviorReference),
 
         // Foreign/custom types implementing an ffi shim
-        Box::new(foreign::Behavior),
+        Box::new(BehaviorForeign),
     ]
 });
 
@@ -49,13 +53,13 @@ static BEHAVIORS: Lazy<Vec<Box<dyn Behavior>>> = Lazy::new(|| {
 mod scalars; pub use scalars::Behavior as BehaviorScalars;
 mod bool; pub use self::bool::Behavior as BehaviorBool;
 mod duration; pub use duration::Behavior as BehaviorDuration;
-mod string;
+mod string; pub use string::Behavior as BehaviorString;
 
 // Parameterized types
-mod option;
+mod option; pub use option::Behavior as BehaviorOption;
 mod result; pub use result::Behavior as BehaviorResult;
-mod vec;
-mod reference;
+mod vec; pub use vec::Behavior as BehaviorVec;
+mod reference; pub use reference::Behavior as BehaviorReference;
 
 // Foreign/custom types implementing an ffi shim
 mod foreign; pub use foreign::Behavior as BehaviorForeign;

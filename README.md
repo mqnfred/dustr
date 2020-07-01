@@ -21,7 +21,8 @@ void main() {
 ```
 
 `dustr` is a binary that parses rust code to generate its dart bindings. The
-rust code must be marked using procedural macros from the [ffishim][1] library.
+rust code must be marked using procedural macros from the [ffishim_derive][1]
+library.
 
 These procedural macros generate an FFI-compatible API around the original data
 structure/function. This is necessary because many basic rust types (`String`,
@@ -43,8 +44,8 @@ to generate a `.so` shared object in the `rusthello/target/debug` directory.)
 ```sh
 cargo new --lib rusthello --name hello
 cat >>rusthello/Cargo.toml <<EOF
-ffishim = "0.1.0"
-ffishim_derive = "0.1.0"
+ffishim = "0.1.1"
+ffishim_derive = "0.1.1"
 
 [lib]
 crate-type = ["cdylib"]
@@ -72,7 +73,8 @@ cd darthello; pub get; cd -
 ```
 
 The `dustr` command will create the dart package containing the bindings to the
-rusthello library. `pub get` pulls in any dependencies.
+rusthello library. `pub get` pulls in any dependencies. We'll now set up the
+dart app which will use our bindings:
 
 ```sh
 mkdir -p dartapp/bin
@@ -96,7 +98,7 @@ EOF
 cd dartapp; pub get; cd -
 ```
 
-Now we can run the dart app while providing it the built rust library:
+Now we can run the app. Don't forget to provide the rust library:
 
 ```sh
 LD_LIBRARY_PATH=rusthello/target/debug dart dartapp/bin/main.dart

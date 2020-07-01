@@ -1,6 +1,6 @@
 use ::syn::*;
 
-/// The std lib's `Vec` type behavior, backed by ffishim library's `FFIVec`.
+/// The behavior of simple, read-only &references.
 pub struct Behavior;
 
 impl super::Behavior for Behavior {

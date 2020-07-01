@@ -1,6 +1,7 @@
 use ::darling::FromDeriveInput;
 
 impl crate::Module {
+    /// Generate the `Module` (and all submodules) from the provided crate.
     pub fn from_crate(path: ::std::path::PathBuf) -> ::anyhow::Result<Self> {
         let manifest = ::cargo_toml::Manifest::from_path(&path.join("Cargo.toml"))?;
         let name = manifest.package.ok_or_else(|| {
@@ -9,6 +10,7 @@ impl crate::Module {
         Self::from_file(name.clone(), name, path.join("src/lib.rs"))
     }
 
+    /// Generate the `Module` (and all submodules) from the provided file.
     pub fn from_file(
         name: String,
         crate_name: String,

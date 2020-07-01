@@ -13,8 +13,8 @@ sed -i "s#^]\$#\t\"${dir}\",\n]#g" Cargo.toml
 cargo new --lib ${dir}
 
 cat >> ${dir}/Cargo.toml <<EOF
-ffishim = "0.1.0"
-ffishim_derive = "0.1.0"
+ffishim = "0.1.1"
+ffishim_derive = "0.1.1"
 
 [lib]
 name = "${name}"

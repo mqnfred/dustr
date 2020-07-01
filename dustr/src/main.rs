@@ -1,4 +1,4 @@
-use ::clap::Clap;
+use clap::Clap;
 
 fn main() {
     let opts = Options::parse();
@@ -13,11 +13,15 @@ fn run(opts: Options) -> ::anyhow::Result<()> {
 }
 
 #[derive(Clap, Debug)]
-#[clap(version = "0.1.0", author = "Louis Feuvrier")]
+#[clap(version = "0.1.1", author = "Louis Feuvrier")]
 struct Options {
     #[clap(short = 'n', long = "name", about = "Dart library name")]
     name: String,
-    #[clap(short = 'd', long = "dest", about = "Folder to initialize the dart library in")]
+    #[clap(
+        short = 'd',
+        long = "dest",
+        about = "Folder to initialize the dart library in"
+    )]
     destination: ::std::path::PathBuf,
     #[clap(name = "crates", about = "Crates to generate dart bindings for")]
     crates: Vec<::std::path::PathBuf>,
