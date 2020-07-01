@@ -62,7 +62,7 @@ dependencies = [
 [[package]]
 name = "clap"
 version = "3.0.0-beta.1"
-source = "git+https://github.com/clap-rs/clap/#e926c299603767223188a18ead96764018a4756f"
+source = "git+https://github.com/clap-rs/clap/#9fc8ec965e42db926ef6aa894810c23600dac49d"
 dependencies = [
  "atty",
  "bitflags",
@@ -80,7 +80,7 @@ dependencies = [
 [[package]]
 name = "clap_derive"
 version = "3.0.0-beta.1"
-source = "git+https://github.com/clap-rs/clap/#e926c299603767223188a18ead96764018a4756f"
+source = "git+https://github.com/clap-rs/clap/#9fc8ec965e42db926ef6aa894810c23600dac49d"
 dependencies = [
  "heck",
  "proc-macro-error",
@@ -166,9 +166,9 @@ dependencies = [
 
 [[package]]
 name = "ffishim"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "70da9156196577c1f1157f56c90af1a7aec50251cd7b8f77b6ec407ce7c0edd1"
+checksum = "f984f93bc49e8fb181c846be149f3c00328755424dd646b92c8520956bb87703"
 dependencies = [
  "anyhow",
  "darling",
