@@ -137,7 +137,7 @@ fn filter_item_enum(ie: ::syn::ItemEnum) -> ::anyhow::Result<Option<::ffishim::D
 }
 
 fn filter_item_fn(ifn: ::syn::ItemFn) -> Option<::syn::ItemFn> {
-    if derives_ffishim_use_case(&ifn.attrs) {
+    if derives_ffishim_function(&ifn.attrs) {
         Some(ifn)
     } else {
         None
@@ -164,6 +164,6 @@ fn derives_ffishim(attrs: &Vec<::syn::Attribute>) -> bool {
     })
 }
 
-fn derives_ffishim_use_case(attrs: &Vec<::syn::Attribute>) -> bool {
-    attrs.iter().any(|attr| attr.path.is_ident("ffishim_use_case"))
+fn derives_ffishim_function(attrs: &Vec<::syn::Attribute>) -> bool {
+    attrs.iter().any(|attr| attr.path.is_ident("ffishim_function"))
 }

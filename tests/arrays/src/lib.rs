@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate ffishim_derive;
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn new_u64_array(first: u64, second: u64) -> Vec<u64> {
     vec![first, second]
 }
@@ -17,7 +17,7 @@ pub struct Person {
     tagline: String,
 }
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn create_crowd() -> Crowd {
     Crowd{
         members: vec![

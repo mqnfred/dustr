@@ -3,7 +3,7 @@
 With `dustr`, you can call this rust code:
 
 ```rust
-#[ffishim_use_case]
+#[ffishim_function]
 fn hello(s: String) -> String {
     format!("Hello, {}!", s)
 }
@@ -55,7 +55,7 @@ cat >rusthello/src/lib.rs <<EOF
 extern crate ffishim_derive;
 
 #[ffishim_library]
-#[ffishim_use_case]
+#[ffishim_function]
 fn hello(s: String) -> String {
     format!("Hello, {}!", s)
 }

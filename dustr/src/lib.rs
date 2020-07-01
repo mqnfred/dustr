@@ -4,7 +4,7 @@
 //! With dustr, you can call this rust code:
 //!
 //! ```ignore
-//! #[ffishim_use_case]
+//! #[ffishim_function]
 //! fn hello(s: String) -> String {
 //!     format!("Hello, {}!", s)
 //! }

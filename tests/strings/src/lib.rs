@@ -7,7 +7,7 @@ pub struct Address {
     country: String,
 }
 
-#[ffishim_use_case]
+#[ffishim_function]
 fn set_address_line(mut addr: Address, line: String) -> Address {
     addr.line = line;
     addr
@@ -16,7 +16,7 @@ fn set_address_line(mut addr: Address, line: String) -> Address {
 // TODO: the dart side leaks this string in the wrapper
 // function. this is a real bug that needs fixing. would
 // likely imply wrapping the string on the dart side
-#[ffishim_use_case]
+#[ffishim_function]
 fn get_address_line(addr: Address) -> String {
     addr.line
 }
