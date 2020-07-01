@@ -21,8 +21,8 @@ void main() {
 ```
 
 `dustr` is a binary that parses rust code to generate its dart bindings. The
-rust code must be marked using procedural macros from the [ffishim_derive][1]
-library.
+rust code must be marked using the [ffishim_derive][1] procedural macros from
+the [ffishim][4] library.
 
 These procedural macros generate an FFI-compatible API around the original data
 structure/function. This is necessary because many basic rust types (`String`,
@@ -156,6 +156,7 @@ This crate is still in beta. It is not fit for production use yet.
  - Write README.md introduction on what this crate does
  - Where to write binary documentation in doc.rs?
 
-[1]: https://github.com/mqnfred/ffishim
+[1]: https://docs.rs/ffishim_derive/0.1.1/ffishim_derive
 [2]: https://github.com/dart-lang/sdk/issues/37271
 [3]: https://github.com/dart-lang/sdk/issues/41062
+[4]: https://github.com/mqnfred/ffishim
