@@ -3,9 +3,14 @@
 With `dustr`, you can call this rust code:
 
 ```rust
+#[derive(FFIShim)]
+struct User {
+    name: String,
+}
+
 #[ffishim_function]
-fn hello(s: String) -> String {
-    format!("Hello, {}!", s)
+fn hello(u: User) -> String {
+    format!("Hello, {}!", u.name)
 }
 ```
 
@@ -15,7 +20,7 @@ from dart:
 import 'package:hello/hello.dart';
 
 void main() {
-    var greeting = hello("fred");
+    var greeting = hello(User.build("fred"));
     print("${greeting}");
 }
 ```
@@ -54,10 +59,14 @@ cat >rusthello/src/lib.rs <<EOF
 #[macro_use]
 extern crate ffishim_derive;
 
-#[ffishim_library]
+#[derive(FFIShim)]
+struct User {
+    name: String,
+}
+
 #[ffishim_function]
-fn hello(s: String) -> String {
-    format!("Hello, {}!", s)
+fn hello(u: User) -> String {
+    format!("Hello, {}!", u.name)
 }
 EOF
 cargo build --manifest-path=rusthello/Cargo.toml
@@ -82,7 +91,7 @@ cat >dartapp/bin/main.dart <<EOF
 import 'package:hello/hello.dart';
 
 void main() {
-    var greeting = hello("fred");
+    var greeting = hello(User.build("fred"));
     print("\${greeting}");
 }
 EOF
