@@ -44,8 +44,8 @@ to generate a `.so` shared object in the `rusthello/target/debug` directory.)
 ```sh
 cargo new --lib rusthello --name hello
 cat >>rusthello/Cargo.toml <<EOF
-ffishim = "0.1.1"
-ffishim_derive = "0.1.1"
+ffishim = "^0"
+ffishim_derive = "^0"
 
 [lib]
 crate-type = ["cdylib"]
@@ -156,7 +156,7 @@ This crate is still in beta. It is not fit for production use yet.
  - Write README.md introduction on what this crate does
  - Where to write binary documentation in doc.rs?
 
-[1]: https://docs.rs/ffishim_derive/0.1.1/ffishim_derive
+[1]: https://docs.rs/ffishim_derive/0.1.2/ffishim_derive
 [2]: https://github.com/dart-lang/sdk/issues/37271
 [3]: https://github.com/dart-lang/sdk/issues/41062
 [4]: https://github.com/mqnfred/ffishim

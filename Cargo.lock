@@ -132,7 +132,7 @@ checksum = "134951f4028bdadb9b84baf4232681efbf277da25144b9b0ad65df75946c422b"
 
 [[package]]
 name = "dustr"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "cargo_toml",
@@ -183,9 +183,9 @@ dependencies = [
 
 [[package]]
 name = "ffishim_derive"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7213820d59222d64516481154f04cdd4196cfd444226c21e6d9f7e20d13d103"
+checksum = "8e22e5befc06b49d12774b1c0c9eb50021f459ed8bbd83a4e5c77ce11810c945"
 dependencies = [
  "darling",
  "ffishim",

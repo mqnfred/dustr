@@ -101,7 +101,7 @@ mod imports;
 /// necessary to generate the final bindings for this structure (field names, types, constructor,
 /// destructor, ...)
 ///
-/// [1]: https://docs.rs/ffishim/0.1.1/ffishim/struct.Data.html
+/// [1]: https://docs.rs/ffishim/0.1.2/ffishim/struct.Data.html
 #[derive(Debug)]
 pub struct Struct {
     name: String,
@@ -145,7 +145,7 @@ mod r#struct;
 /// generate the final bindings for this enum (variants, field names, types, constructors,
 /// destructors...)
 ///
-/// [1]: https://docs.rs/ffishim/0.1.1/ffishim/struct.Data.html
+/// [1]: https://docs.rs/ffishim/0.1.2/ffishim/struct.Data.html
 #[derive(Debug)]
 pub struct Enum {
     name: String,

@@ -13,12 +13,12 @@ fn run(opts: Options) -> ::anyhow::Result<()> {
 }
 
 #[derive(Clap, Debug)]
-#[clap(version = "0.1.1", author = "Louis Feuvrier")]
+#[clap(author = "Louis Feuvrier")]
 struct Options {
-    #[clap(short = 'n', long = "name", about = "Dart library name")]
+    #[clap(short = "n", long = "name", about = "Dart library name")]
     name: String,
     #[clap(
-        short = 'd',
+        short = "d",
         long = "dest",
         about = "Folder to initialize the dart library in"
     )]
