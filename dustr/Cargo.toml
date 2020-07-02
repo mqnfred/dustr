@@ -2,7 +2,7 @@
 name = "dustr"
 description = "Generate dart code based on a rust ffishim"
 keywords = ["dart", "bindings", "ffi"]
-categories = ["external-ffi-bindings"]
+categories = ["development-tools::ffi"]
 authors = ["Louis Feuvrier <louisf@uber.com>"]
 repository = "https://github.com/mqnfred/dustr"
 license = "MIT OR Apache-2.0"
