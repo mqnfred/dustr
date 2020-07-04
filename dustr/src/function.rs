@@ -55,7 +55,7 @@ impl crate::Function {
         Ok(Self{
             lib_name: "dylib".to_owned(),
 
-            name: shim_name.to_mixed_case(),
+            name: format!("free{}", ident),
             // TODO: vvvvvvvvv should this behavior live somewhere else?
             field_types: vec![format!("Pointer<{}>", ident)],
             ret_type: "void".to_owned(),
